@@ -1,4 +1,4 @@
-﻿namespace ProtoLib
+﻿namespace ProtonetApp.Objects
 {
     public class User : ObjectBase
     {

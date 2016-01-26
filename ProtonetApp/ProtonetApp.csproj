@@ -101,6 +101,14 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Objects\Me.cs" />
+    <Compile Include="Objects\Meep.cs" />
+    <Compile Include="Objects\ObjectBase.cs" />
+    <Compile Include="Objects\PrivateChat.cs" />
+    <Compile Include="Objects\PrivateChats.cs" />
+    <Compile Include="Protonet.cs" />
+    <Compile Include="Objects\TokenResponse.cs" />
+    <Compile Include="Objects\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
