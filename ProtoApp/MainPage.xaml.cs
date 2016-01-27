@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProtoApp.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,16 +16,30 @@ using Windows.UI.Xaml.Navigation;
 
 // Die Vorlage "Leere Seite" ist unter http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 dokumentiert.
 
-namespace ProtonetApp
+namespace ProtoApp
 {
     /// <summary>
     /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public MainViewModel ViewModel => DataContext as MainViewModel;
+
+
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(LoginPage));
+        }
+
+        private void Chats_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(ChatsPage));
         }
     }
 }

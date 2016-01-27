@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="6db9c544-3972-4a18-93a6-cd2fa06496fb"
-    Publisher="CN=mbrue"
+    Name="005975ec-7a4d-4d58-87a6-c8a21b6a65e1"
+    Publisher="CN=marbru"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="6db9c544-3972-4a18-93a6-cd2fa06496fb" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="005975ec-7a4d-4d58-87a6-c8a21b6a65e1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>ProtonetApp</DisplayName>
-    <PublisherDisplayName>mbrue</PublisherDisplayName>
+    <DisplayName>ProtoApp</DisplayName>
+    <PublisherDisplayName>marbru</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -30,12 +30,12 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="ProtonetApp.App">
+      EntryPoint="ProtoApp.App">
       <uap:VisualElements
-        DisplayName="ProtonetApp"
+        DisplayName="ProtoApp"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="ProtonetApp"
+        Description="ProtoApp"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

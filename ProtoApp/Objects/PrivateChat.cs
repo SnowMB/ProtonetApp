@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace ProtonetApp.Objects
+namespace ProtoApp.Objects
 {
     public class PrivateChat : ObjectBase
     {
-        public string NotificationID { get; set; }
+        public int NotificationID { get; set; }
 
         public Meep LastMeep { get; set; }
 
@@ -16,7 +16,7 @@ namespace ProtonetApp.Objects
 
         public string SubsciptionsURL { get; set; }
 
-        public string NotificationsCount { get; set; }
+        public int NotificationsCount { get; set; }
 
         public List<User> OtherUsers { get; set; }
     }

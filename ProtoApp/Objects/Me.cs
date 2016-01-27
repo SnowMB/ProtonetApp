@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProtonetApp.Objects
+namespace ProtoApp.Objects
 {
     public class Me : User
     {

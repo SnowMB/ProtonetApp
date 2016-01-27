@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProtonetApp.Objects
+namespace ProtoApp.Objects
 {
     public class PrivateChats
     {

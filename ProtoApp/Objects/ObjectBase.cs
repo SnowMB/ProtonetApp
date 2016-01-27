@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ProtonetApp.Objects
+namespace ProtoApp.Objects
 {
     public class ObjectBase
     {

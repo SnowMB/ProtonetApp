@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using ProtonetApp.Objects;
+using ProtoApp.Objects;
 using System;
 using System.IO;
 using System.Text;
@@ -9,9 +9,9 @@ using Windows.Security.Cryptography.Certificates;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 
-namespace ProtoLib
+namespace ProtoApp
 {
-    public class ProtoNet
+    public class ProtonetDataService : IProtonetDataService
     {
         const string TOKEN = "tokens";
         const string ME = "me";
@@ -28,14 +28,15 @@ namespace ProtoLib
 
 
 
-        public ProtoNet()
+        public ProtonetDataService()
         {
             var filter = new HttpBaseProtocolFilter();
             filter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
             filter.IgnorableServerCertificateErrors.Add(ChainValidationResult.InvalidName);
             client = new HttpClient(filter);
         }
-        public ProtoNet(string url)
+
+        public ProtonetDataService(string url) : this()
         {
             URI = new Uri(url);
         }
@@ -54,15 +55,15 @@ namespace ProtoLib
         }
         public async Task<string> getTokenString(string user, string password)
         {
-            var request = new HttpRequestMessage( HttpMethod.Get, new Uri(URI, TOKEN));
+            var request = new HttpRequestMessage(HttpMethod.Get, new Uri(URI, TOKEN));
 
             var cred = $"{user}:{password}";
-            var crypt  =Convert.ToBase64String(Encoding.ASCII.GetBytes(cred));
+            var crypt = Convert.ToBase64String(Encoding.ASCII.GetBytes(cred));
 
             request.Headers.Add("Authorization", crypt);
 
             var response = await client.SendRequestAsync(request).AsTask(cts.Token);
-            
+
 
             return await ReadResponse(response);
         }
@@ -80,7 +81,7 @@ namespace ProtoLib
             return await SendRequestAndReadResponse(request);
         }
 
-        
+
         public async Task<PrivateChats> getPrivateChats(bool excludeEmpty = false, int? offset = null, int? limit = null, int? other_user_id = null)
         {
             var json = await getPrivateChatsString(excludeEmpty, offset, limit, other_user_id);
@@ -105,5 +106,50 @@ namespace ProtoLib
         }
         private async Task<string> ReadResponse(HttpResponseMessage response) => await response.Content.ReadAsStringAsync().AsTask(cts.Token);
         private async Task<string> SendRequestAndReadResponse(HttpRequestMessage request) => await ReadResponse(await client.SendRequestAsync(request).AsTask());
+
+        Task<Me> IProtonetDataService.getMe()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<PrivateChats> IProtonetDataService.getPrivateChats(bool excludeEmpty, int? offset, int? limit, int? other_user_id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<TokenResponse> IProtonetDataService.getToken(string user, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PrivateChat> getPrivateChat(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> getPrivateChatString(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Meeps> getMeeps(int id, ObjectType type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> getMeepsString(int id, ObjectType type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Meep> getMeep(int objectId, ObjectType type, int meepId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> getMeepString(int objectId, ObjectType type, int meepId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

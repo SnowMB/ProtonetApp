@@ -1,4 +1,4 @@
-﻿namespace ProtonetApp.Objects
+﻿namespace ProtoApp.Objects
 {
     public class Meep : ObjectBase
     {

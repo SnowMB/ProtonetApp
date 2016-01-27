@@ -1,5 +1,5 @@
-﻿namespace ProtonetApp.Objects
-{
+﻿namespace ProtoApp.Objects
+{ 
     public class TokenResponse : ObjectBase
     {
         public string Token { get; set; }

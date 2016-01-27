@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtonetApp", "ProtonetApp\ProtonetApp.csproj", "{423FC76A-7558-4FE2-9C3E-50B9583598F8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9C81956C-B8F8-423C-9771-7C72DA595BD9}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoApp", "ProtoApp\ProtoApp.csproj", "{08332A59-AA8D-4990-A060-06BACE91FD67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,26 +22,30 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|ARM.ActiveCfg = Debug|ARM
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|ARM.Build.0 = Debug|ARM
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|ARM.Deploy.0 = Debug|ARM
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|x64.ActiveCfg = Debug|x64
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|x64.Build.0 = Debug|x64
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|x64.Deploy.0 = Debug|x64
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|x86.ActiveCfg = Debug|x86
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|x86.Build.0 = Debug|x86
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Debug|x86.Deploy.0 = Debug|x86
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|Any CPU.ActiveCfg = Release|x86
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|ARM.ActiveCfg = Release|ARM
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|ARM.Build.0 = Release|ARM
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|ARM.Deploy.0 = Release|ARM
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|x64.ActiveCfg = Release|x64
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|x64.Build.0 = Release|x64
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|x64.Deploy.0 = Release|x64
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|x86.ActiveCfg = Release|x86
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|x86.Build.0 = Release|x86
-		{423FC76A-7558-4FE2-9C3E-50B9583598F8}.Release|x86.Deploy.0 = Release|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|Any CPU.Build.0 = Debug|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|Any CPU.Deploy.0 = Debug|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|ARM.ActiveCfg = Debug|ARM
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|ARM.Build.0 = Debug|ARM
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|ARM.Deploy.0 = Debug|ARM
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|x64.ActiveCfg = Debug|x64
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|x64.Build.0 = Debug|x64
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|x64.Deploy.0 = Debug|x64
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|x86.ActiveCfg = Debug|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|x86.Build.0 = Debug|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Debug|x86.Deploy.0 = Debug|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|Any CPU.ActiveCfg = Release|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|Any CPU.Build.0 = Release|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|Any CPU.Deploy.0 = Release|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|ARM.ActiveCfg = Release|ARM
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|ARM.Build.0 = Release|ARM
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|ARM.Deploy.0 = Release|ARM
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|x64.ActiveCfg = Release|x64
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|x64.Build.0 = Release|x64
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|x64.Deploy.0 = Release|x64
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|x86.ActiveCfg = Release|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|x86.Build.0 = Release|x86
+		{08332A59-AA8D-4990-A060-06BACE91FD67}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
