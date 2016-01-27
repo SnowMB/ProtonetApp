@@ -1,0 +1,21 @@
+﻿<Page
+    x:Class="ProtoApp.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProtoApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding Login, Source={StaticResource Locator}}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Width="200" Height="200">
+            <TextBlock>Account</TextBlock>
+            <TextBox Text="{Binding Name, Mode=TwoWay}"></TextBox>
+            <TextBlock>Passwort</TextBlock>
+            <PasswordBox x:Name="pwb"></PasswordBox>
+            <Button HorizontalAlignment="Stretch" Command="{Binding LoginCommand}" CommandParameter="{Binding Password, ElementName=pwb}">Login</Button>
+            <Button HorizontalAlignment="Stretch" Click="Button_Click">Cancel</Button>
+        </StackPanel>
+    </Grid>
+</Page>
