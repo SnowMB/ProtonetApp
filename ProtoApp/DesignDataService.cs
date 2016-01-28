@@ -21,11 +21,11 @@ namespace ProtoApp
             return new Me()
             {
                 Avatar = "...",
-                CreatedAt = "created at",
+                CreatedAt = DateTime.Now,
                 Deactivated = false,
                 Email = "test@test.test",
                 LastActiveAt = "last active at",
-                UpdatedAt = "updated at",
+                UpdatedAt = DateTime.Now,
                 DevicesUrl = "no url",
                 FirstName = "firstname",
                 LastName = "lastname",
@@ -42,19 +42,16 @@ namespace ProtoApp
         public async Task<string> getMeString()
         {
             var obj = await getMe();
-            return SerializeObject(obj); 
-        }      
-
-        public async Task<PrivateChats> getPrivateChats(bool excludeEmpty = false, int? offset = default(int?), int? limit = default(int?), int? other_user_id = default(int?))
-        {
-            return new PrivateChats()
-            {
-                Chats = new List<PrivateChat>()
-                {
-                    await getPrivateChat(8)
-                }
-            };
+            return SerializeObject(obj);
         }
+
+        public async Task<List<PrivateChat>> getPrivateChats(bool excludeEmpty = false, int? offset = default(int?), int? limit = default(int?), int? other_user_id = default(int?))
+        {
+            return new List<PrivateChat>()
+            {
+                    await getPrivateChat(8)
+            };
+        } 
         public async Task<string> getPrivateChatsString(bool excludeEmpty = false, int? offset = default(int?), int? limit = default(int?), int? other_user_id = default(int?))
         {
             var obj = await getPrivateChats(excludeEmpty,offset,limit,other_user_id);
@@ -66,17 +63,17 @@ namespace ProtoApp
         {
             return new PrivateChat()
             {
-                CreatedAt = "now",
+                CreatedAt = DateTime.Now,
                 ID = id,
                 CurrentMeepNumber = 0,
-                LastMeep = new Meep(),
+                LastMeep = await getMeep(id, ObjectType.PrivateChat, 11),
                 LastMeepDate = "now",
                 MeepsUrl = "no url",
                 NotificationID = 9,
-                NotificationsCount = 2,
+                //NotificationsCount = 2,
                 OtherUsers = new List<User>() { await getMe() },
-                SubsciptionsURL = "no url",
-                UpdatedAt = "yesterday",
+                //SubsciptionsURL = "no url",
+                UpdatedAt = DateTime.Now,
                 Url = "no url"
             };
         }
@@ -92,13 +89,13 @@ namespace ProtoApp
                 return new TokenResponse()
                 {
                     Comment = "Nur test",
-                    CreatedAt = "now",
+                    CreatedAt = DateTime.Now,
                     ID = 8,
                     OwnerID = 1,
                     UserID = 0,
                     OwnerType = "User",
                     Token = "jklÜdakjJKLBbKLBhBKLJBHsdfJd",
-                    UpdatedAt = "never",
+                    UpdatedAt = DateTime.Now,
                     Url = "no url"
                 };
 
@@ -110,14 +107,11 @@ namespace ProtoApp
             return SerializeObject(obj);
         }
 
-        public async Task<Meeps> getMeeps(int id, ObjectType type)
+        public async Task<List<Meep>> getMeeps(int id, ObjectType type)
         {
-            return new Meeps()
+            return new List<Meep>()
             {
-                Messages = new List<Meep>()
-                {
-                    await getMeep(id, type, 12)
-                }
+                await getMeep(id, type, 12)
             };
         }
         public async Task<string> getMeepsString(int id, ObjectType type)
@@ -130,12 +124,12 @@ namespace ProtoApp
         {
             return new Meep()
             {
-                CreatedAt = "now",
+                CreatedAt = DateTime.Now,
                 ID = meepId,
                 Message = "das ist eine Dummynachricht",
                 Number = 0,
                 Type = "Meep",
-                UpdatedAt = "now",
+                UpdatedAt = DateTime.Now,
                 Url = "no url",
                 User = await getMe()
             };
@@ -144,6 +138,16 @@ namespace ProtoApp
         {
             var obj = await getMeep(objectId, type, meepId);
             return SerializeObject(obj);
+        }
+
+        public Task<Meep> createMeep(int objectId, ObjectType type, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> createMeepString(int objectId, ObjectType type, string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

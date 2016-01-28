@@ -1,4 +1,5 @@
-﻿using ProtoApp.ViewModel;
+﻿using ProtoApp.Objects;
+using ProtoApp.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +34,7 @@ namespace ProtoApp
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+             base.OnNavigatedTo(e);
 
             try
             {
@@ -43,7 +44,16 @@ namespace ProtoApp
             {
                 var dialog = new MessageDialog(ex.ToString());
                 await dialog.ShowAsync();
+                Frame.GoBack();
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var chat = btn.DataContext as PrivateChat;
+
+            Frame.Navigate(typeof(ChatPage), chat.ID);
         }
     }
 }

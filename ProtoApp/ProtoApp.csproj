@@ -113,10 +113,12 @@
     </Compile>
     <Compile Include="Objects\Me.cs" />
     <Compile Include="Objects\Meep.cs" />
-    <Compile Include="Objects\Meeps.cs" />
+    <Compile Include="Objects\MeepContainer.cs" />
+    <Compile Include="Objects\MeepsContainer.cs" />
     <Compile Include="Objects\ObjectBase.cs" />
     <Compile Include="Objects\PrivateChat.cs" />
-    <Compile Include="Objects\PrivateChats.cs" />
+    <Compile Include="Objects\PrivateChatContainer.cs" />
+    <Compile Include="Objects\PrivateChatsContainer.cs" />
     <Compile Include="Objects\TokenResponse.cs" />
     <Compile Include="Objects\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

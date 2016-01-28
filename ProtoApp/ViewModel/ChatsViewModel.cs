@@ -25,7 +25,7 @@ namespace ProtoApp.ViewModel
         {
             Chats.Clear();
             var newChats = await service.getPrivateChats();
-            foreach(var chat in newChats.Chats)
+            foreach(var chat in newChats)
                 Chats.Add(chat);
         }
 

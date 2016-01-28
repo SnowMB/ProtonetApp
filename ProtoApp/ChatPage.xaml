@@ -9,6 +9,31 @@
     DataContext="{Binding Chat, Source={StaticResource Locator}}">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <ListView ItemsSource="{Binding Meeps}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="10" Background="Aqua">
+                        <StackPanel Margin="5">
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Message}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="10" Text="{Binding User.FirstName}"/>
+                                <TextBlock FontSize="10" Text="{Binding UpdatedAt}"/>
+                            </StackPanel>
+                            
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+        </ListView>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBox Width="250" x:Name="messageBox"></TextBox>
+            <Button Command="{Binding SendCommand}" CommandParameter="{Binding Text, ElementName=messageBox}">Senden</Button>
+            
+        </StackPanel>
     </Grid>
 </Page>

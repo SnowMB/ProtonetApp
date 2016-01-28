@@ -45,6 +45,7 @@ namespace ProtoApp
             {
                 var dialog = new MessageDialog(ex.ToString());
                 await dialog.ShowAsync();
+                Frame.GoBack();
             }
 
         }

@@ -23,8 +23,8 @@ namespace ProtoApp.ViewModel
             }
             else
             {
-                Default.Register<IProtonetDataService, DesignDataService>();
-                //Default.Register<IProtonetDataService, ProtonetDataService>();
+                //Default.Register<IProtonetDataService, DesignDataService>();
+                Default.Register<IProtonetDataService>(() => new ProtonetDataService("https://192.168.11.2/api/v1/"));
             }
 
             Default.Register<MainViewModel>();

@@ -46,7 +46,7 @@ namespace ProtoApp.ViewModel
                     OnLoginSucessfull();
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 OnLoginFailed();
             }

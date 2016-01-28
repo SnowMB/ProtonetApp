@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ProtoApp.Objects
 {
-    public class Meeps
+    public class MeepContainer
     {
-        public List<Meep> Messages { get; set; }
+        public Meep Meep { get; set; }
     }
 }

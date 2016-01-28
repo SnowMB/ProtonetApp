@@ -7,11 +7,24 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     DataContext="{Binding Chats, Source={StaticResource Locator}}">
-    <Page.Resources>
-    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <ListView ItemsSource="{Binding Chats}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Button Click="Button_Click">
+                        <StackPanel>
+                            <Image Source="{Binding OtherUsers[0].Avatar}"/>
+                            <TextBlock FontWeight="Bold">ID</TextBlock>
+                            <TextBlock Text="{Binding ID}"/>
+                            <TextBlock FontWeight="Bold">Last Message</TextBlock>
+                            <TextBlock Text="{Binding LastMeep.Message}"/>
+                            <TextBlock FontWeight="Bold">Date</TextBlock>
+                            <TextBlock Text="{Binding LastMeepDate}"/>
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
 
     </Grid>
