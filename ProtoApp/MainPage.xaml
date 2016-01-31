@@ -11,8 +11,8 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Margin="100">
             <TextBlock>ProtonetApp</TextBlock>
-            <Button Click="Chats_Click" IsEnabled="{Binding Authentificated}">Chats</Button>
-            <Button Click="Login_Click">Login</Button>
+            <Button Command="{Binding NavigateChatsCommand}">Chats</Button>
+            <Button Command="{Binding LogoutCommand}">Logout</Button>
         </StackPanel>
     </Grid>
 </Page>

@@ -2,7 +2,7 @@
 
 namespace ProtoApp.Objects
 { 
-    public class TokenResponse : ObjectBase
+    public class TokenResponse : UpdateableObject
     {
         public string Token { get; set; }
 

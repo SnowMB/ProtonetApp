@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProtoApp.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +24,9 @@ namespace ProtoApp
     /// </summary>
     sealed partial class App : Application
     {
+        public ViewModelLocator Locator => Resources.Values.OfType<ViewModelLocator>().Single();
+
+
         /// <summary>
         /// Initialisiert das Singletonanwendungsobjekt.  Dies ist die erste Zeile von erstelltem Code
         /// und daher das logische Äquivalent von main() bzw. WinMain().
@@ -41,7 +45,7 @@ namespace ProtoApp
         /// werden z. B. verwendet, wenn die Anwendung gestartet wird, um eine bestimmte Datei zu öffnen.
         /// </summary>
         /// <param name="e">Details über Startanforderung und -prozess.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
 #if DEBUG
@@ -60,7 +64,6 @@ namespace ProtoApp
                 // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
                 rootFrame = new Frame();
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
                 rootFrame.Navigated += OnNavigated;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -86,7 +89,16 @@ namespace ProtoApp
                 // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
                 // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
                 // übergeben werden
-                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                //rootFrame.Navigate(typeof(MainPage), e.Arguments);
+
+
+                Locator.NavigationService.NavigateTo("Login");
+                //NUR FÜR TESTS!
+#if DEBUG
+                //await Locator.DataClient.Authentificate("marc.brueckner", "ProtonetAPI");
+                await Locator.DataClient.Authentificate("failed", "login");
+#endif
+                
             }
             // Sicherstellen, dass das aktuelle Fenster aktiv ist
             Window.Current.Activate();
@@ -97,31 +109,23 @@ namespace ProtoApp
         {
             // Each time a navigation event occurs, update the Back button's visibility
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                ((Frame)sender).CanGoBack ?
+                ((Frame)sender).CanGoBack && Locator.NavigationService.CurrentPageKey != "Login" ?
                 AppViewBackButtonVisibility.Visible :
                 AppViewBackButtonVisibility.Collapsed;
         }
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            //Frame rootFrame = Window.Current.Content as Frame;
 
-            if (rootFrame.CanGoBack)
-            {
-                e.Handled = true;
-                rootFrame.GoBack();
-            }
+            //if (rootFrame.CanGoBack)
+            //{
+            //    e.Handled = true;
+            //    rootFrame.GoBack();
+            //}
+            Locator.NavigationService.GoBack();
         }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn die Navigation auf eine bestimmte Seite fehlschlägt
-        /// </summary>
-        /// <param name="sender">Der Rahmen, bei dem die Navigation fehlgeschlagen ist</param>
-        /// <param name="e">Details über den Navigationsfehler</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
 
         /// <summary>
         /// Wird aufgerufen, wenn die Ausführung der Anwendung angehalten wird.  Der Anwendungszustand wird gespeichert,

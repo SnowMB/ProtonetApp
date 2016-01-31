@@ -10,6 +10,7 @@ using Windows.Security.Cryptography.Certificates;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 using Windows.Web.Http.Headers;
+using Windows.Storage.Streams;
 
 namespace ProtoApp
 {
@@ -53,8 +54,7 @@ namespace ProtoApp
             URI = new Uri(url);
         }
 
-
-
+        
         public void CancelAllRequests()
         {
             cts.Cancel();
@@ -62,9 +62,7 @@ namespace ProtoApp
             cts = new CancellationTokenSource();
         }
 
-
-
-
+        
         public async Task<TokenResponse> getToken(string user, string password)
         {
             var json = await getTokenString(user, password);
@@ -153,10 +151,28 @@ namespace ProtoApp
 
 
 
+        public async Task<Meep> createMeep(int objectId, ObjectType type, string message)
+        {
+            var json = await createMeepString(objectId, type, message);
+            return ConvertToObject<MeepContainer>(json).Meep;
+        }
+        public async Task<string> createMeepString(int objectId, ObjectType type, string message)
+        {
+            var uri = GetMeepsUri(objectId, type);
+            var request = CreateRequestWithToken(HttpMethod.Post, uri);
+            request.Content = new HttpStringContent("{" + $"\"message\":\"{message}\"" + "}");
+            request.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
+
+            return await SendRequestAndReadResponse(request);
+        }
 
 
-
-
+        public async Task<IBuffer> GetDownloadBuffer(string url)
+        {
+            var request = CreateRequestWithToken(HttpMethod.Get, new Uri(url));
+            var response = await client.SendRequestAsync(request);
+            return await response.Content.ReadAsBufferAsync();
+        }
 
 
 
@@ -189,26 +205,12 @@ namespace ProtoApp
         private async Task<string> SendRequestAndReadResponse(HttpRequestMessage request) => await ReadResponse(await client.SendRequestAsync(request).AsTask());
         private T ConvertToObject<T> (string json)
         {
+            Debug.WriteLine(json);
             var obj = JsonConvert.DeserializeObject<T>(json);
             Debug.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
             return obj;
         }
 
-        public async Task<Meep> createMeep(int objectId, ObjectType type, string message)
-        {
-            var json = await createMeepString(objectId, type, message);
-            return ConvertToObject<MeepContainer>(json).Meep;
-        }
-
-        public async  Task<string> createMeepString(int objectId, ObjectType type, string message)
-        {
-            var uri = GetMeepsUri(objectId, type);
-            var request = CreateRequestWithToken(HttpMethod.Post, uri);
-            request.Content = new HttpStringContent("{" + $"\"message\":\"{message}\"" + "}");
-            request.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
-
-            return await SendRequestAndReadResponse(request);
-        }
-
+        
     }
 }

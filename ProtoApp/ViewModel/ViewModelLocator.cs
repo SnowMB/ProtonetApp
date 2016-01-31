@@ -1,11 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using static GalaSoft.MvvmLight.Ioc.SimpleIoc;
 
@@ -15,7 +10,7 @@ namespace ProtoApp.ViewModel
     {
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            ServiceLocator.SetLocatorProvider(() => Default);
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -23,34 +18,58 @@ namespace ProtoApp.ViewModel
             }
             else
             {
-                //Default.Register<IProtonetDataService, DesignDataService>();
-                Default.Register<IProtonetDataService>(() => new ProtonetDataService("https://192.168.11.2/api/v1/"));
+                Default.Register<IProtonetImages>(() => new ProtonetImages(DataClient));
+                //Default.Register<IProtonetClient>(() => new ProtonetClient("https://192.168.11.2/"));
+                Default.Register<IProtonetClient>(() => new ProtonetClient("https://stier74.protonet.info/"));
             }
 
+            //ViewModels
             Default.Register<MainViewModel>();
             Default.Register<ChatsViewModel>();
             Default.Register<ChatViewModel>();
             Default.Register<LoginViewModel>();
+
+            //Navigation
+            Default.Register<INavigationService>(() =>
+            {
+                var nav = new NavigationService();
+                nav.Configure("Login", typeof(LoginPage));
+                nav.Configure("Main", typeof(MainPage));
+                nav.Configure("Chats", typeof(ChatsPage));
+                nav.Configure("Chat", typeof(ChatPage));
+
+                return nav;
+            });
+
+            //DialogService
+            Default.Register<IDialogService>(() => new DialogService());
+
+
+            DataClient.AuthentificationFailed += (s, e) => NavigationService.NavigateTo("Login");
+            DataClient.AuthentificationComplete += (s, e) => NavigationService.NavigateTo("Main");
+            DataClient.LoggedOut += (s, e) => NavigationService.NavigateTo("Login");
+
         }
 
-        public MainViewModel Main
-        {
-            get { return Default.GetInstance<MainViewModel>(); }
-        }
+        
 
-        public ChatsViewModel Chats
-        {
-            get { return Default.GetInstance<ChatsViewModel>(); }
-        }
+        public MainViewModel Main => Default.GetInstance<MainViewModel>();
 
-        public ChatViewModel Chat
-        {
-            get { return Default.GetInstance<ChatViewModel>(); }
-        }
 
-        public LoginViewModel Login
-        {
-            get { return Default.GetInstance<LoginViewModel>(); }
-        }
+        public ChatsViewModel Chats => Default.GetInstance<ChatsViewModel>();
+
+
+        public ChatViewModel Chat => Default.GetInstance<ChatViewModel>();
+        
+
+        public LoginViewModel Login => Default.GetInstance<LoginViewModel>();
+
+
+        public IProtonetClient DataClient => Default.GetInstance<IProtonetClient>();
+
+        public IProtonetImages ImagesService => Default.GetInstance<IProtonetImages>();
+
+
+        public INavigationService NavigationService => Default.GetInstance<INavigationService>();
     }
 }

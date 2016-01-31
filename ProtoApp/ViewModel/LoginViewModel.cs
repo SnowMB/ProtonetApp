@@ -1,7 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,50 +11,35 @@ using System.Windows.Input;
 
 namespace ProtoApp.ViewModel
 {
-    public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : NavigatedViewModel
     {
-        public string Name { get; set; }
-
-        //public string Password { get; set; }
+        public string Name { get; set; } = "";
 
 
-        public event EventHandler LoginSucessfull;
-        public void OnLoginSucessfull() => LoginSucessfull?.Invoke(this, EventArgs.Empty);
+        public ICommand LoginCommand => new RelayCommand<string>(async s => await LoginAsync(s));
 
-        public event EventHandler LoginFailed;
-        public void OnLoginFailed() => LoginFailed?.Invoke(this, EventArgs.Empty);
+        private IProtonetClient client;
+        private INavigationService navigation;
 
-
-
-        public ICommand LoginCommand => new RelayCommand<string>(async s => await Login(s));
-
-        private IProtonetDataService service;
-
-        public LoginViewModel(IProtonetDataService dataService)
+        public LoginViewModel(IProtonetClient protoClient, INavigationService navigationService)
         {
-            service = dataService;
+            client = protoClient;
+            navigation = navigationService;
         }
 
 
         
-        private async Task Login(string s)
+        private async Task LoginAsync(string s)
         {
-            try
-            {
-                var token = await service.getToken(Name, s);
-                if (!string.IsNullOrWhiteSpace(token?.Token))
-                {
-                    service.Token = token.Token;
-                    OnLoginSucessfull();
-                }
-            }
-            catch (Exception ex)
-            {
-                OnLoginFailed();
-            }
-            
+            await client.Authentificate(Name, s);
         }
 
+
+        public override void OnNavigatedTo(object param)
+        {
+            if (client.User != null)
+                Name = client.User.UserName;
+        }
 
     }
 }

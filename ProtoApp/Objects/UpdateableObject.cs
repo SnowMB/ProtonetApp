@@ -3,14 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ProtoApp.Objects
 {
-    public class ObjectBase
+    public class UpdateableObject : ProtonetObject
     {
         public string Url { get; set; }
-
-        public int ID { get; set; }
 
         [JsonProperty(PropertyName = "created_at")]
         public DateTime CreatedAt { get; set; }

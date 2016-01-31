@@ -104,21 +104,30 @@
     <Compile Include="ChatsPage.xaml.cs">
       <DependentUpon>ChatsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IProtonetClient.cs" />
+    <Compile Include="Objects\MeContainer.cs" />
+    <Compile Include="Objects\NewMeep.cs" />
+    <Compile Include="ProtonetClient.cs" />
+    <Compile Include="ViewModelPage.cs" />
     <Compile Include="IProtonetDataService.cs" />
+    <Compile Include="IProtonetImages.cs" />
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Objects\File.cs" />
     <Compile Include="Objects\Me.cs" />
     <Compile Include="Objects\Meep.cs" />
-    <Compile Include="Objects\MeepContainer.cs" />
     <Compile Include="Objects\MeepsContainer.cs" />
-    <Compile Include="Objects\ObjectBase.cs" />
+    <Compile Include="Objects\MeepContainer.cs" />
+    <Compile Include="Objects\ProtonetObject.cs" />
     <Compile Include="Objects\PrivateChat.cs" />
     <Compile Include="Objects\PrivateChatContainer.cs" />
     <Compile Include="Objects\PrivateChatsContainer.cs" />
+    <Compile Include="Objects\UpdateableObject.cs" />
+    <Compile Include="ProtonetImages.cs" />
     <Compile Include="Objects\TokenResponse.cs" />
     <Compile Include="Objects\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -128,6 +137,7 @@
     <Compile Include="DesignDataService.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\NavigatedViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>

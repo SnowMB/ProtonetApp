@@ -4,6 +4,7 @@ using ProtoApp.Objects;
 using Newtonsoft.Json;
 using static Newtonsoft.Json.JsonConvert;
 using System.Collections.Generic;
+using Windows.Storage.Streams;
 
 namespace ProtoApp
 {
@@ -146,6 +147,11 @@ namespace ProtoApp
         }
 
         public Task<string> createMeepString(int objectId, ObjectType type, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IBuffer> GetDownloadBuffer(string url)
         {
             throw new NotImplementedException();
         }

@@ -2,7 +2,7 @@
 
 namespace ProtoApp.Objects
 {
-    public class User : ObjectBase
+    public class User : UpdateableObject
     {
         [JsonProperty(PropertyName = "first_name")]
         public string FirstName { get; set; }

@@ -29,25 +29,6 @@ namespace ProtoApp
         public LoginPage()
         {
             InitializeComponent();
-
-            ViewModel.LoginSucessfull += ViewModel_LoginSucessfull;
-            ViewModel.LoginFailed += ViewModel_LoginFailed;
-        }
-
-        private async void ViewModel_LoginFailed(object sender, EventArgs e)
-        {
-            var dialog = new MessageDialog("Login failed!");
-            await dialog.ShowAsync();
-        }
-
-        private void ViewModel_LoginSucessfull(object sender, EventArgs e)
-        {
-            Frame.GoBack();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.GoBack();
         }
     }
 }

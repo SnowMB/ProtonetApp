@@ -15,7 +15,6 @@
             <TextBlock>Passwort</TextBlock>
             <PasswordBox x:Name="pwb"></PasswordBox>
             <Button HorizontalAlignment="Stretch" Command="{Binding LoginCommand}" CommandParameter="{Binding Password, ElementName=pwb}">Login</Button>
-            <Button HorizontalAlignment="Stretch" Click="Button_Click">Cancel</Button>
         </StackPanel>
     </Grid>
 </Page>

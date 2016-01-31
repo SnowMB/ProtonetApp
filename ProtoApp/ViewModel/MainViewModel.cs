@@ -1,22 +1,39 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ProtoApp.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : NavigatedViewModel
     {
-        public bool Authentificated { get { return !string.IsNullOrWhiteSpace(service.Token); } }
+        private IProtonetClient client;
 
-        private IProtonetDataService service;
+        private INavigationService navigation;
 
-        public MainViewModel(IProtonetDataService dataService)
+        public MainViewModel(IProtonetClient protoClient, INavigationService navigationService)
         {
-            service = dataService;
+            client = protoClient;
+            navigation = navigationService;
+
+            protoClient.PropertyChanged += DataService_PropertyChanged;
         }
 
+        private void DataService_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            navigateChatsCommand.RaiseCanExecuteChanged();
+            logoutCommand.RaiseCanExecuteChanged();
+        }
+
+        private RelayCommand navigateChatsCommand;
+        public ICommand NavigateChatsCommand => navigateChatsCommand != null ? navigateChatsCommand : navigateChatsCommand = new RelayCommand(() => navigation.NavigateTo("Chats"), () => client.IsAuthentificated);
+
+        public RelayCommand logoutCommand;
+        public ICommand LogoutCommand => logoutCommand != null ? logoutCommand : logoutCommand = new RelayCommand(() => client.Logout(), () => client.IsAuthentificated);
     }
 }

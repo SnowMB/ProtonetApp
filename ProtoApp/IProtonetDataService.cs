@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ProtoApp.Objects;
+using Windows.Storage.Streams;
 
 namespace ProtoApp
 {
@@ -23,6 +24,7 @@ namespace ProtoApp
         Task<string> getPrivateChatsString(bool excludeEmpty = false, int? offset = default(int?), int? limit = default(int?), int? other_user_id = default(int?));
         Task<string> getPrivateChatString(int id);
         Task<TokenResponse> getToken(string user, string password);
+        Task<IBuffer> GetDownloadBuffer(string url);
         Task<string> getTokenString(string user, string password);
     }
 

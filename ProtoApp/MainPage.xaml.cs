@@ -28,18 +28,9 @@ namespace ProtoApp
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
 
-        private void Login_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(LoginPage));
-        }
-
-        private void Chats_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(ChatsPage));
-        }
     }
 }

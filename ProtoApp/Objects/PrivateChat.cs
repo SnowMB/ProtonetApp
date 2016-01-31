@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProtoApp.Objects
 {
-    public class PrivateChat : ObjectBase
+    public class PrivateChat : UpdateableObject
     {
         [JsonProperty(PropertyName = "notification_id")]
         public int NotificationID { get; set; }

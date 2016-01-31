@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ProtoApp.Objects
 {
-    public class Meep : ObjectBase
+    public class Meep : UpdateableObject
     {
         public string Type { get; set; }
 
@@ -12,5 +13,7 @@ namespace ProtoApp.Objects
         public string Message { get; set; }
 
         public User User { get; set; }
+
+        public List<FileObject> Files { get; set; }
     }
 }

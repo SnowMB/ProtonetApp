@@ -23,30 +23,15 @@ namespace ProtoApp
     /// <summary>
     /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
     /// </summary>
-    public sealed partial class ChatPage : Page
+    public sealed partial class ChatPage : ViewModelPage
     {
-        public ChatViewModel ViewModel => this.DataContext as ChatViewModel;
-
         public ChatPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        private void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
-            base.OnNavigatedTo(e);
-
-            try
-            {
-                var chatID = (int)e.Parameter;
-                await ViewModel.loadChat(chatID);
-            }
-            catch (Exception ex)
-            {
-                var dialog = new MessageDialog(ex.ToString());
-                await dialog.ShowAsync();
-                Frame.GoBack();
-            }
 
         }
     }
