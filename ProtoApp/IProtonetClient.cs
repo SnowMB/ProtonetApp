@@ -23,6 +23,7 @@ namespace ProtoApp
         void CancelAllRequests();
         void Logout();
         Task<Meep> CreateMeep(string url, NewMeep meep);
+        Task<Meep> CreateFileMeep(string url, Stream file);
         Task DownloadToFile(string url, StorageFile file);
         Task<PrivateChat> GetChat(string url);
         Task<List<Meep>> GetChatMeeps(string url);

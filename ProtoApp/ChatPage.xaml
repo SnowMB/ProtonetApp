@@ -41,6 +41,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <TextBox Width="250" x:Name="messageBox"></TextBox>
             <Button Command="{Binding SendCommand}" CommandParameter="{Binding Text, ElementName=messageBox}">Senden</Button>
+            <Button Command="{Binding SendFileCommand}"><SymbolIcon Symbol="Pictures"></SymbolIcon></Button>
             
         </StackPanel>
     </Grid>

@@ -88,17 +88,25 @@ namespace ProtoApp
             if (folder == null)
                 folder = await CreateFolder();
 
+            Stream dl=null, write=null;
 
-            var dl = await service.GetDownloadStream(url);
+            try
+            {
+                dl = await service.GetDownloadStream(url);
 
-            var name = id.ToString();
-            var file = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+                var name = id.ToString();
+                var file = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
 
-            var write = await file.OpenStreamForWriteAsync();
-            dl.CopyTo(write);
-
-
-            return file;
+                write = await file.OpenStreamForWriteAsync();
+                dl.CopyTo(write);
+                return file;
+            }
+            finally
+            {
+                write?.Dispose();
+                dl?.Dispose();
+            }
         }
+
     }
 }

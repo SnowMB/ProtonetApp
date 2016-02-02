@@ -215,8 +215,18 @@ namespace ProtoApp
         public async Task<Meep> CreateMeep (string url, NewMeep meep)
         {
             var json = JsonConvert.SerializeObject(meep);
-            var data = new StringContent(json);
-            var responseObject = await HandleAuthentificationError(ReadPostResponseObjectFromUrl<MeepContainer>(url, data));
+            var content = new StringContent(json);
+            content.Headers.ContentType.MediaType = "application/json";
+            var responseObject = await HandleAuthentificationError(ReadPostResponseObjectFromUrl<MeepContainer>(url, content));
+            return responseObject.Meep;
+        }
+
+        public async Task<Meep> CreateFileMeep (string url, Stream file)
+        {
+            var content = new StreamContent(file);
+            //content.Headers.ContentType.MediaType = "application/octet-stream";
+            var responseObject = await HandleAuthentificationError(ReadPostResponseObjectFromUrl<MeepContainer>(url, content));
+
             return responseObject.Meep;
         }
 
@@ -267,12 +277,13 @@ namespace ProtoApp
         private async Task<string> ReadPostResponseFromUrl(string url, HttpContent content)
         {
             var resp = await client.PostAsync(url, content);
+
             resp.EnsureSuccessStatusCode();
             return await resp.Content.ReadAsStringAsync();
         }
         public async Task<T> ReadPostResponseObjectFromUrl<T>(string url, HttpContent content )
         {
-            content.Headers.ContentType.MediaType = "application/json";
+            //content.Headers.ContentType.MediaType = "application/json";
             var json = await ReadPostResponseFromUrl(url, content);
             return JsonConvert.DeserializeObject<T>(json);
         }

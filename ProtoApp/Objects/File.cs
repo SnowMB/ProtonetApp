@@ -18,13 +18,5 @@ namespace ProtoApp.Objects
 
         public string Type { get; set; }
 
-        [OnDeserialized]
-        internal void OnDeserialized (StreamingContext context) //Angaben der Bilder sind sonst falsch!!
-        {
-            var relativeUri = "api/v1/";
-            Url = Url.Replace(relativeUri, "");
-            ThumbnailUrl = ThumbnailUrl.Replace(relativeUri, "");
-        }
-
     }
 }

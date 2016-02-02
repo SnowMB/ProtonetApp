@@ -6,11 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 
 namespace ProtoApp.ViewModel
 {
@@ -43,9 +45,8 @@ namespace ProtoApp.ViewModel
         }
 
 
-
-        public ICommand SendCommand => new RelayCommand<string>(async s => await Send(s));
-
+        private ICommand sendCommand;
+        public ICommand SendCommand => sendCommand != null? sendCommand : sendCommand = new RelayCommand<string>(async s => await Send(s), s => string.IsNullOrWhiteSpace(s));
         private async Task Send(string s)
         {
             try
@@ -59,7 +60,26 @@ namespace ProtoApp.ViewModel
             }
         }
 
-
+        public ICommand SendFileCommand => new RelayCommand(SendFile);
+        private async void SendFile()
+        {
+            try
+            {
+                var filePicker = new FileOpenPicker();
+                filePicker.FileTypeFilter.Add(".jpg");
+                var file = await filePicker.PickSingleFileAsync();
+                if (file != null)
+                {
+                    var read = await file.OpenReadAsync().AsTask();
+                    var meep = await client.CreateFileMeep(chat.MeepsUrl, read.AsStreamForRead());
+                    Meeps.Add(meep);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+        }
 
 
 
