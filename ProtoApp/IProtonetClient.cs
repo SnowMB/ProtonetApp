@@ -14,6 +14,8 @@ namespace ProtoApp
         bool IsAuthentificated { get; }
         Me User { get; }
 
+        string Token { get; }
+
         event EventHandler AuthentificationComplete;
         event EventHandler AuthentificationFailed;
         event EventHandler LoggedOut;

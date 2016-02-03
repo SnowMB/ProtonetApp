@@ -24,7 +24,7 @@ namespace ProtoApp
         const string MEEPS = "meeps/";
 
 
-        public bool IsAuthentificated => token != null;
+        public bool IsAuthentificated => Token != null;
 
 
         private Me user;
@@ -40,7 +40,7 @@ namespace ProtoApp
         
 
 
-        private string token;
+        public string Token { get; private set; }
 
         private CancellationTokenSource cts = new CancellationTokenSource();
         public void CancelAllRequests()
@@ -90,7 +90,7 @@ namespace ProtoApp
         {
             ClearLoginData();
 
-            token = tokenString;
+            Token = tokenString;
 
             await CreateAuthentificatedClientSettings();
             
@@ -109,7 +109,7 @@ namespace ProtoApp
             if (tokenResp == null)
                 return false;
 
-            token = tokenResp.Token;
+            Token = tokenResp.Token;
 
             await CreateAuthentificatedClientSettings();
 
@@ -118,7 +118,7 @@ namespace ProtoApp
 
         private async Task CreateAuthentificatedClientSettings()
         {
-            client.DefaultRequestHeaders.Add("X-Protonet-Token", token);
+            client.DefaultRequestHeaders.Add("X-Protonet-Token", Token);
             User = await GetMe();
 
             OnAuthentificationComplete();
@@ -128,7 +128,7 @@ namespace ProtoApp
         private void ClearLoginData()
         {
             User = null;
-            token = null;
+            Token = null;
             client.DefaultRequestHeaders.Clear();
         }
 

@@ -1,7 +1,8 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Views;
 using Microsoft.Practices.ServiceLocation;
-
+using Windows.Security.Credentials;
 using static GalaSoft.MvvmLight.Ioc.SimpleIoc;
 
 namespace ProtoApp.ViewModel
@@ -43,13 +44,33 @@ namespace ProtoApp.ViewModel
             Default.Register<IDialogService>(() => new DialogService());
 
 
-            DataClient.AuthentificationFailed += (s, e) => NavigationService.NavigateTo("Login");
-            DataClient.AuthentificationComplete += (s, e) => NavigationService.NavigateTo("Main");
-            DataClient.LoggedOut += (s, e) => NavigationService.NavigateTo("Login");
+            DataClient.AuthentificationFailed += LoggedOut;
+            DataClient.LoggedOut += LoggedOut;
 
+            DataClient.AuthentificationComplete += LoggedIn;
+
+            //DataClient.AuthentificationFailed += (s, e) => { NavigationService.NavigateTo("Login") };
+            DataClient.AuthentificationComplete += (s, e) => NavigationService.NavigateTo("Main");
+            //DataClient.LoggedOut += (s, e) => NavigationService.NavigateTo("Login");
         }
 
-        
+        private void LoggedIn(object sender, EventArgs e)
+        {
+            var vault = new PasswordVault();
+            vault.Add(new PasswordCredential("ProtonetApp", DataClient.User.UserName, DataClient.Token));
+
+            NavigationService.NavigateTo("Main");
+        }
+
+        private void LoggedOut(object sender, System.EventArgs e)
+        {
+            var vault = new PasswordVault();
+            var cred = vault.FindAllByResource("ProtonetApp");
+            foreach (var c in cred)
+                vault.Remove(c);
+
+            NavigationService.NavigateTo("Login");
+        }
 
         public MainViewModel Main => Default.GetInstance<MainViewModel>();
 
