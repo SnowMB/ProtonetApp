@@ -12,7 +12,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace ProtoApp.ViewModel
 {
@@ -20,7 +23,7 @@ namespace ProtoApp.ViewModel
     {
         private PrivateChat chat;
         public PrivateChat Chat { get { return chat; } private set { Set(nameof(Chat), ref chat, value); } }
-        public ObservableCollection<Meep> Meeps { get; } = new ObservableCollection<Meep>();
+        public ObservableCollection<FileMeep> Meeps { get; } = new ObservableCollection<FileMeep>();
 
 
 
@@ -52,7 +55,7 @@ namespace ProtoApp.ViewModel
             try
             {
                 var meep = await client.CreateMeep(Chat.MeepsUrl, new NewMeep() { Message = s });
-                Meeps.Add(meep);
+                Meeps.Add(CreateFileMeep(meep));
             }
             catch(Exception ex)
             {
@@ -72,7 +75,7 @@ namespace ProtoApp.ViewModel
                 {
                     var read = await file.OpenReadAsync().AsTask();
                     var meep = await client.CreateFileMeep(chat.MeepsUrl, read.AsStreamForRead());
-                    Meeps.Add(meep);
+                    Meeps.Add(CreateFileMeep(meep));
                 }
             }
             catch (Exception ex)
@@ -91,29 +94,50 @@ namespace ProtoApp.ViewModel
             var meeps = await client.GetChatMeeps(Chat.MeepsUrl);
             foreach (var m in meeps)
             {
-                await GetLocalImages(m);
-                Meeps.Add(m);
+                var filemeep = GetLocalFiles(m).Result;
+                Meeps.Add(filemeep);   
             }
         }
 
-        private async Task GetLocalImages(Meep m)
+        private async Task<FileMeep> GetLocalFiles(Meep m)
         {
-            var imageTasks = new List<Task>();
+            var fileTasks = new List<Task>();
+
+
+            var fileMeep = CreateFileMeep(m);
+
 
             foreach (var f in m.Files)
             {
-                var task  = iservice.GetLocalOrDownloadImage(f.ThumbnailUrl, f.ID);
-                var fullTask = task.ContinueWith( x =>
-                {
-                    f.ThumbnailUrl = x.Result.Path;
-                    return;
-                });
-                imageTasks.Add(fullTask);
+                var task  = iservice.GetLocalOrDownloadImage(f.ThumbnailUrl, f.ID, f.Type);
+                var fullTask = task.ContinueWith(async x => fileMeep.LocalFiles.Add(await GetImage(await x)));
+  
+                fileTasks.Add(fullTask);
             }
 
-            await Task.WhenAll(imageTasks.ToArray());
+            await Task.WhenAll(fileTasks.ToArray());
+
+            return fileMeep;
         }
 
+
+
+
+        private FileMeep CreateFileMeep(Meep m)
+        {
+            return new FileMeep()
+            {
+                CreatedAt = m.CreatedAt,
+                Files = m.Files,
+                ID = m.ID,
+                Message = m.Message,
+                Number = m.Number,
+                Type = m.Type,
+                UpdatedAt = m.UpdatedAt,
+                Url = m.Url,
+                User = m.User
+            };
+        }
 
 
         public async override void OnNavigatedTo(object param)
@@ -123,13 +147,35 @@ namespace ProtoApp.ViewModel
             try
             {
                 var url = (string)param;
+
+
                 await loadChat(url);
+
             }
             catch (Exception ex)
             {
                 await dialoges.ShowMessage(ex.ToString(), "");
 
                 navigation.GoBack();
+            }
+        }
+
+        private async Task<BitmapImage> GetImage(StorageFile file)
+        {
+            var thumb = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+            try
+            {
+                
+                var image = new BitmapImage();
+                image.SetSource(thumb);
+                return image;
+                
+            }
+
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                throw;
             }
         }
     }

@@ -19,10 +19,10 @@
                 <DataTemplate>
                     <Border Margin="10" Background="Aqua">
                         <StackPanel Margin="5">
-                            <ListView ItemsSource="{Binding Files}">
+                            <ListView ItemsSource="{Binding LocalFiles}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Image ImageFailed="Image_ImageFailed" Source="{Binding Url}"/>
+                                        <Image ImageFailed="Image_ImageFailed" Source="{Binding}"/>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>

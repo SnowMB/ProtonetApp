@@ -59,20 +59,20 @@ namespace ProtoApp
 
         }
         
-        public async Task<StorageFile> GetLocalOrDownloadImage(string url, int id)
+        public async Task<StorageFile> GetLocalOrDownloadImage(string url, int id, string fileType)
         {
-            var file = await GetImageLocal(id);
+            var file = await GetImageLocal(id, fileType);
 
             if (file == null)
-                file = await DownLoadFile(url, id);
+                file = await DownLoadFile(url, id, fileType);
 
             return file;
         }
 
-        public async Task<StorageFile> GetImageLocal(int fileID)
+        public async Task<StorageFile> GetImageLocal(int fileID, string fileType)
         {
             var folder = await GetFolder();
-            var name = fileID.ToString();
+            var name = ConstructFileName(fileID, fileType);
 
             if (folder == null)
                 return null;
@@ -82,7 +82,7 @@ namespace ProtoApp
             
         }
 
-        public async Task<StorageFile> DownLoadFile(string url, int id)
+        public async Task<StorageFile> DownLoadFile( string url, int id, string fileType )
         {
             var folder = await GetFolder();
             if (folder == null)
@@ -94,7 +94,7 @@ namespace ProtoApp
             {
                 dl = await service.GetDownloadStream(url);
 
-                var name = id.ToString();
+                var name = ConstructFileName(id, fileType);
                 var file = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
 
                 write = await file.OpenStreamForWriteAsync();
@@ -105,6 +105,22 @@ namespace ProtoApp
             {
                 write?.Dispose();
                 dl?.Dispose();
+            }
+        }
+
+
+        private string ConstructFileName(int id, string fileType)
+        {
+            return id.ToString() + ConstructFileEnding(fileType);
+        }
+
+
+        private string ConstructFileEnding(string fileType)
+        {
+            switch(fileType)
+            {
+                case "image/jpeg": return ".jpg";
+                default: return "";
             }
         }
 

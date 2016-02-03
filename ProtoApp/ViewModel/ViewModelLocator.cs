@@ -30,16 +30,14 @@ namespace ProtoApp.ViewModel
             Default.Register<LoginViewModel>();
 
             //Navigation
-            Default.Register<INavigationService>(() =>
-            {
-                var nav = new NavigationService();
-                nav.Configure("Login", typeof(LoginPage));
-                nav.Configure("Main", typeof(MainPage));
-                nav.Configure("Chats", typeof(ChatsPage));
-                nav.Configure("Chat", typeof(ChatPage));
+            Default.Register<INavigationService>(() => new NavigationService());
 
-                return nav;
-            });
+
+            var nav = NavigationService as NavigationService;
+            nav.Configure("Login", typeof(LoginPage));
+            nav.Configure("Main", typeof(MainPage));
+            nav.Configure("Chats", typeof(ChatsPage));
+            nav.Configure("Chat", typeof(ChatPage));
 
             //DialogService
             Default.Register<IDialogService>(() => new DialogService());

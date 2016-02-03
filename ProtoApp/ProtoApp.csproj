@@ -105,12 +105,12 @@
       <DependentUpon>ChatsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="IProtonetClient.cs" />
+    <Compile Include="IProtonetImages.cs" />
     <Compile Include="Objects\MeContainer.cs" />
     <Compile Include="Objects\NewMeep.cs" />
     <Compile Include="ProtonetClient.cs" />
     <Compile Include="ViewModelPage.cs" />
     <Compile Include="IProtonetDataService.cs" />
-    <Compile Include="IProtonetImages.cs" />
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
@@ -135,6 +135,7 @@
     <Compile Include="ViewModel\ChatsViewModel.cs" />
     <Compile Include="ViewModel\ChatViewModel.cs" />
     <Compile Include="DesignDataService.cs" />
+    <Compile Include="ViewModel\FileMeep.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NavigatedViewModel.cs" />
