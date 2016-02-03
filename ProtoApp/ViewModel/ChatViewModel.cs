@@ -94,7 +94,7 @@ namespace ProtoApp.ViewModel
             var meeps = await client.GetChatMeeps(Chat.MeepsUrl);
             foreach (var m in meeps)
             {
-                var filemeep = GetLocalFiles(m).Result;
+                var filemeep = await GetLocalFiles(m);
                 Meeps.Add(filemeep);   
             }
         }
@@ -109,8 +109,8 @@ namespace ProtoApp.ViewModel
 
             foreach (var f in m.Files)
             {
-                var task  = iservice.GetLocalOrDownloadImage(f.ThumbnailUrl, f.ID, f.Type);
-                var fullTask = task.ContinueWith(async x => fileMeep.LocalFiles.Add(await GetImage(await x)));
+                var task  = iservice.GetOrDownloadThumbnailFile(f.ThumbnailUrl, f.ID, f.Type);
+                var fullTask = task.ContinueWith(async x => fileMeep.LocalFiles.Add(await (await task).OpenReadAsync()));
   
                 fileTasks.Add(fullTask);
             }
@@ -157,25 +157,6 @@ namespace ProtoApp.ViewModel
                 await dialoges.ShowMessage(ex.ToString(), "");
 
                 navigation.GoBack();
-            }
-        }
-
-        private async Task<BitmapImage> GetImage(StorageFile file)
-        {
-            var thumb = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
-            try
-            {
-                
-                var image = new BitmapImage();
-                image.SetSource(thumb);
-                return image;
-                
-            }
-
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-                throw;
             }
         }
     }

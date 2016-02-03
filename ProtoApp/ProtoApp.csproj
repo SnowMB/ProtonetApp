@@ -109,6 +109,7 @@
     <Compile Include="Objects\MeContainer.cs" />
     <Compile Include="Objects\NewMeep.cs" />
     <Compile Include="ProtonetClient.cs" />
+    <Compile Include="StorageFileToImageConverter.cs" />
     <Compile Include="ViewModelPage.cs" />
     <Compile Include="IProtonetDataService.cs" />
     <Compile Include="LoginPage.xaml.cs">

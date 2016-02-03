@@ -59,30 +59,43 @@ namespace ProtoApp
 
         }
         
-        public async Task<StorageFile> GetLocalOrDownloadImage(string url, int id, string fileType)
-        {
-            var file = await GetImageLocal(id, fileType);
 
+        public async Task<StorageFile> GetOrDownloadFullFile(string url, int id, string fileType)
+        {
+            var name = ConstructFileName(id, fileType);
+            return await GetLocalOrDownloadImage(url, name);
+        }
+
+        public async Task<StorageFile> GetOrDownloadThumbnailFile(string url, int id, string fileType)
+        {
+            var name = ConstructThumbnailName(id, fileType);
+            return await GetLocalOrDownloadImage(url, name);
+        }
+
+
+        private async Task<StorageFile> GetLocalOrDownloadImage(string url, string fileName)
+        {
+            var file = await GetImageLocal(fileName);
+            
             if (file == null)
-                file = await DownLoadFile(url, id, fileType);
+                file = await DownLoadFile(url, fileName);
 
             return file;
         }
 
-        public async Task<StorageFile> GetImageLocal(int fileID, string fileType)
+        private async Task<StorageFile> GetImageLocal(string filename)
         {
             var folder = await GetFolder();
-            var name = ConstructFileName(fileID, fileType);
-
+            
             if (folder == null)
                 return null;
 
-            return await folder.TryGetItemAsync(name) as StorageFile;   
+            return await folder.TryGetItemAsync(filename) as StorageFile;   
 
             
         }
 
-        public async Task<StorageFile> DownLoadFile( string url, int id, string fileType )
+        private async Task<StorageFile> DownLoadFile( string url, string fileName )
         {
             var folder = await GetFolder();
             if (folder == null)
@@ -94,8 +107,7 @@ namespace ProtoApp
             {
                 dl = await service.GetDownloadStream(url);
 
-                var name = ConstructFileName(id, fileType);
-                var file = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+                var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 
                 write = await file.OpenStreamForWriteAsync();
                 dl.CopyTo(write);
@@ -109,11 +121,9 @@ namespace ProtoApp
         }
 
 
-        private string ConstructFileName(int id, string fileType)
-        {
-            return id.ToString() + ConstructFileEnding(fileType);
-        }
-
+        private string ConstructFileName(int id, string fileType) => $"{id}{ConstructFileEnding(fileType)}";
+        
+        private string ConstructThumbnailName(int id, string fileType) => $"{id}_thumb{ConstructFileEnding(fileType)}";
 
         private string ConstructFileEnding(string fileType)
         {

@@ -22,7 +22,7 @@
                             <ListView ItemsSource="{Binding LocalFiles}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Image ImageFailed="Image_ImageFailed" Source="{Binding}"/>
+                                        <Image ImageFailed="Image_ImageFailed" Source="{Binding Converter={StaticResource ImageConverter}}"/>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
@@ -31,7 +31,6 @@
                                 <TextBlock FontSize="10" Text="{Binding User.FirstName}"/>
                                 <TextBlock FontSize="10" Text="{Binding UpdatedAt}"/>
                             </StackPanel>
-                            
                         </StackPanel>
                     </Border>
                 </DataTemplate>
