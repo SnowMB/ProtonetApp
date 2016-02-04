@@ -9,12 +9,9 @@
     mc:Ignorable="d"
     DataContext="{Binding Chat, Source={StaticResource Locator}}">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <ListView ItemsSource="{Binding Meeps}">
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        
+        <ListView RelativePanel.Above="text" ItemsSource="{Binding Meeps}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="10" Background="Aqua">
@@ -37,11 +34,11 @@
             </ListView.ItemTemplate>
             
         </ListView>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
+        <StackPanel x:Name="text" RelativePanel.AlignBottomWithPanel="True" Grid.Row="1" Orientation="Horizontal">
             <TextBox Width="250" x:Name="messageBox"></TextBox>
             <Button Command="{Binding SendCommand}" CommandParameter="{Binding Text, ElementName=messageBox}">Senden</Button>
             <Button Command="{Binding SendFileCommand}"><SymbolIcon Symbol="Pictures"></SymbolIcon></Button>
             
         </StackPanel>
-    </Grid>
+    </RelativePanel>
 </local:ViewModelPage>

@@ -104,6 +104,7 @@
     <Compile Include="ChatsPage.xaml.cs">
       <DependentUpon>ChatsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DummyClient.cs" />
     <Compile Include="IProtonetClient.cs" />
     <Compile Include="IProtonetImages.cs" />
     <Compile Include="Objects\MeContainer.cs" />

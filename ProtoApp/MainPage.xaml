@@ -8,11 +8,17 @@
     mc:Ignorable="d"
     DataContext="{Binding Main, Source={StaticResource Locator}}">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Margin="100">
-            <TextBlock>ProtonetApp</TextBlock>
-            <Button Command="{Binding NavigateChatsCommand}">Chats</Button>
-            <Button Command="{Binding LogoutCommand}">Logout</Button>
-        </StackPanel>
-    </Grid>
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+        <TextBlock RelativePanel.AlignHorizontalCenterWithPanel="True" 
+                   RelativePanel.AlignTopWithPanel="True">
+            ProtonetApp
+        </TextBlock>    
+        <StackPanel RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                
+                <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding NavigateChatsCommand}">Chats</Button>
+                <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding LogoutCommand}">Logout</Button>
+            </StackPanel>
+
+    </RelativePanel>
+    
 </Page>

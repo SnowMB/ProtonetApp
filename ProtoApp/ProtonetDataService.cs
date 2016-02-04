@@ -7,53 +7,29 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Security.Cryptography.Certificates;
-using Windows.Web.Http;
-using Windows.Web.Http.Filters;
-using Windows.Web.Http.Headers;
-using Windows.Storage.Streams;
+using System.Net.Http;
 
 namespace ProtoApp
 {
     public class ProtonetDataService : IProtonetDataService
     {
-        const string API = "api/v1/";
-        const string TOKEN = "tokens/";
-        const string ME = "me/";
-        const string PROJECTs = "projects/";
-        const string CHATS = "private_chats/";
-        const string USER = "users/";
-        const string TOPICS = "topics/";
-        const string MEEPS = "meeps/";
-
         private CancellationTokenSource cts = new CancellationTokenSource();
-        private HttpClient client;
-
+        public HttpClient Client { get; set; }
+        
 
         public Uri URI { get; set; }
         public string Token { get; set; }
 
 
-
         public ProtonetDataService()
         {
-            var filter = new HttpBaseProtocolFilter();
-            filter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
-            filter.IgnorableServerCertificateErrors.Add(ChainValidationResult.InvalidName);
-            filter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
-            client = new HttpClient(filter);
+            Client = new HttpClient();
         }
-        public ProtonetDataService(string url) : this()
+
+        public ProtonetDataService(HttpClient client)
         {
-            if (!url.EndsWith(API))
-            {
-                if (!url.EndsWith("/"))
-                    url += "/";
-                url += API;
-            }
-
-            URI = new Uri(url);
+            Client = client;
         }
-
         
         public void CancelAllRequests()
         {
@@ -63,29 +39,24 @@ namespace ProtoApp
         }
 
         
-        public async Task<TokenResponse> getToken(string user, string password)
+        public async Task<TokenResponse> getTokenAsync(string url, string user, string password)
         {
-            var json = await getTokenString(user, password);
+            var json = await getTokenStringAsync(url, user, password);
             return ConvertToObject<TokenResponse>(json);
         }
-        public async Task<string> getTokenString(string user, string password)
+        public async Task<string> getTokenStringAsync(string url, string user, string password)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, TokenUri);
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
 
             var cred = $"{user}:{password}";
             var crypt = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(cred));
 
             request.Headers.Add("Authorization", crypt);
 
-            return await SendRequestAndReadResponse(request);
+            return await GetResponseAsync(request);
         }
 
 
-        public async Task<Me> getMe()
-        {
-            var json = await getMeString();
-            return ConvertToObject<Me>(json);
-        }
         public async Task<string> getMeString()
         {
             var request = CreateRequestWithToken(HttpMethod.Get, MeUri);
@@ -167,33 +138,9 @@ namespace ProtoApp
         }
 
 
-        public async Task<IBuffer> GetDownloadBuffer(string url)
-        {
-            var request = CreateRequestWithToken(HttpMethod.Get, new Uri(url));
-            var response = await client.SendRequestAsync(request);
-            return await response.Content.ReadAsBufferAsync();
-        }
 
+        private async Task<string> GetResponseAsync(HttpRequestMessage message) => await (await Client.SendAsync(message, cts.Token)).Content.ReadAsStringAsync();
 
-
-        private Uri TokenUri => new Uri(URI, TOKEN);
-        private Uri MeUri => new Uri(URI, ME);
-        private Uri TopicsUri => new Uri(URI, TOPICS);
-        private Uri ProjectUri => new Uri(URI, PROJECTs);
-        private Uri ChatsUri => new Uri(URI, CHATS);
-       
-        private Uri GetUriFromType(ObjectType type)
-        {
-            switch (type)
-            {
-                case ObjectType.PrivateChat: return ChatsUri;
-                case ObjectType.Project: return ProjectUri;
-                case ObjectType.Topic: return TopicsUri;
-                default: throw new NotImplementedException($"Could not get Meeps for type {type}. Method is not implemented.");
-            }
-        }
-        private Uri AddIdToUri(Uri uri, int id) => new Uri(uri, $"{id}/");
-        private Uri GetMeepsUri(int id, ObjectType type) => new Uri(AddIdToUri(GetUriFromType(type), id), MEEPS);
 
         private HttpRequestMessage CreateRequestWithToken(HttpMethod method, Uri uri)
         {
@@ -201,8 +148,9 @@ namespace ProtoApp
             request.Headers.Add("X-Protonet-Token", Token);
             return request;
         }
-        private async Task<string> ReadResponse(HttpResponseMessage response) => await response.Content.ReadAsStringAsync().AsTask(cts.Token);
-        private async Task<string> SendRequestAndReadResponse(HttpRequestMessage request) => await ReadResponse(await client.SendRequestAsync(request).AsTask());
+
+        
+        
         private T ConvertToObject<T> (string json)
         {
             Debug.WriteLine(json);

@@ -4,13 +4,11 @@ using ProtoApp.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Streams;
 
 namespace ProtoApp
 {
@@ -22,6 +20,8 @@ namespace ProtoApp
 
         const string USER = "users/";
         const string MEEPS = "meeps/";
+
+        const string TOKEN_NAME = "X-Protonet-Token";
 
 
         public bool IsAuthentificated => Token != null;
@@ -54,16 +54,11 @@ namespace ProtoApp
         public void OnAuthentificationComplete() => AuthentificationComplete?.Invoke(this, EventArgs.Empty);
 
         public event EventHandler AuthentificationFailed;
-        public void OnAuthentificationFailed(Exception ex) => AuthentificationFailed?.Invoke(this, new ExceptionEventArgs() { Exception = ex });
+        public void OnAuthentificationFailed() => AuthentificationFailed?.Invoke(this, EventArgs.Empty);
 
         public event EventHandler LoggedOut;
         public void OnLoggedOut() => LoggedOut?.Invoke(this, EventArgs.Empty);
 
-
-        public class ExceptionEventArgs : EventArgs
-        {
-            public Exception Exception { get; set; }
-        }
 
 
 
@@ -106,7 +101,7 @@ namespace ProtoApp
 
             var tokenResp = await GetToken(user, password);
 
-            if (tokenResp == null)
+            if (string.IsNullOrWhiteSpace(tokenResp?.Token))
                 return false;
 
             Token = tokenResp.Token;
@@ -129,7 +124,7 @@ namespace ProtoApp
         {
             User = null;
             Token = null;
-            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Remove(TOKEN_NAME);
         }
 
         public void Logout()
@@ -138,24 +133,6 @@ namespace ProtoApp
             OnLoggedOut();
         }
 
-
-        private async Task<T> HandleAuthentificationError<T> (Task<T> action)
-        {
-            try
-            {
-                return await action;
-            }
-            catch (HttpRequestException ex)
-            {
-                ClearLoginData();
-                OnAuthentificationFailed(ex);
-                return default(T);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
 
 
 
@@ -169,8 +146,9 @@ namespace ProtoApp
         
         public async Task<Me> GetMe ()
         {
-            var response = await HandleAuthentificationError(ReadGetResponseObjectFromUrl<MeContainer>(ME));
-            return response.Me;
+            var response = await GetAndReadResponseObject<MeContainer>(ME);
+            
+            return response?.Me;
         }
 
         public async Task<TokenResponse> GetToken(string user, string password)
@@ -181,43 +159,33 @@ namespace ProtoApp
             var crypt = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(cred));
             request.Headers.Add("Authorization", crypt);
 
-            return await HandleAuthentificationError(Task.Run(async () =>
-           {
-               var resp = await client.SendAsync(request);
-               resp.EnsureSuccessStatusCode();
-
-               var json = await resp.Content.ReadAsStringAsync();
-
-               return JsonConvert.DeserializeObject<TokenResponse>(json);
-           }));
+            return await SendAndReadResponseObject<TokenResponse>(request);
         }
-
 
         public async Task<List<PrivateChat>> GetChats()
         {
-            var responseObject = await HandleAuthentificationError(ReadGetResponseObjectFromUrl<PrivateChatsContainer>(User.PrivateChatsUrl));
-            return responseObject.Chats;
+            var responseObject = await GetAndReadResponseObject<PrivateChatsContainer>(User.PrivateChatsUrl);
+            return responseObject?.Chats;
         } 
 
         public async Task<PrivateChat> GetChat(string url)
         {
-            var responseObject = await HandleAuthentificationError(ReadGetResponseObjectFromUrl<PrivateChatContainer>(url));
-            return responseObject.Chat;
+            var responseObject = await GetAndReadResponseObject<PrivateChatContainer>(url);
+            return responseObject?.Chat;
         }
 
         public async Task<List<Meep>> GetChatMeeps(string url)
         {
-            var responseObject = await HandleAuthentificationError(ReadGetResponseObjectFromUrl<MeepsContainer>(url));
-            return responseObject.Meeps;
+            var responseObject = await GetAndReadResponseObject<MeepsContainer>(url);
+            return responseObject?.Meeps;
         } 
-
 
         public async Task<Meep> CreateMeep (string url, NewMeep meep)
         {
             var json = JsonConvert.SerializeObject(meep);
             var content = new StringContent(json);
             content.Headers.ContentType.MediaType = "application/json";
-            var responseObject = await HandleAuthentificationError(ReadPostResponseObjectFromUrl<MeepContainer>(url, content));
+            var responseObject = await PostAndReadResponseObject<MeepContainer>(url, content);
             return responseObject.Meep;
         }
 
@@ -225,25 +193,10 @@ namespace ProtoApp
         {
             var content = new StreamContent(file);
             //content.Headers.ContentType.MediaType = "application/octet-stream";
-            var responseObject = await HandleAuthentificationError(ReadPostResponseObjectFromUrl<MeepContainer>(url, content));
+            var responseObject = await PostAndReadResponseObject<MeepContainer>(url, content);
 
             return responseObject.Meep;
         }
-
-
-        
-        public async Task DownloadToFile (string url, StorageFile file)
-        {
-            var readstream = await GetDownloadStream(url);
-            var writestream = await file.OpenStreamForWriteAsync();
-
-            readstream.CopyTo(writestream);
-        }
-
-
-
-
-
 
 
         
@@ -251,41 +204,98 @@ namespace ProtoApp
         public async Task<Stream> GetDownloadStream(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var resp = await client.SendAsync(request);
-            return await resp.Content.ReadAsStreamAsync();
+            var resp = await HandleUnauthorizedAccess(client.SendAsync(request));
+            return await resp?.Content?.ReadAsStreamAsync();
             
         }
 
 
 
+        private async Task<Stream> SendAndReadResponseStream(string url)
+        {
+            var response = await HandleUnauthorizedAccess(new Task<HttpResponseMessage> (async () =>
+           {
+               var resp = await client.GetAsync(url);
+               CheckResponseStatus(resp);
+               return resp;
+           }));
+            
 
+            return await response.Content.ReadAsStreamAsync();
+        }
 
-        private async Task<string> ReadGetResponseFromUrl(string url)
+        
+        private async Task<string> SendAndReadResponseContent(HttpRequestMessage message)
+        {
+            var resp = await client.SendAsync(message);
+            CheckResponseStatus(resp);
+
+            return await resp.Content.ReadAsStringAsync();
+        }
+        private async Task<T> SendAndReadResponseObject<T>(HttpRequestMessage message)
+        {
+            var json = await HandleUnauthorizedAccess(SendAndReadResponseContent(message));
+
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
+ 
+        private async Task<string> GetAndReadResponseContent(string url)
         {
             var resp = await client.GetAsync(url);
-            resp.EnsureSuccessStatusCode();
+
+            CheckResponseStatus(resp);
+
             return await resp.Content.ReadAsStringAsync();
 
         }
-        public async Task<T> ReadGetResponseObjectFromUrl<T>(string url)
+        private async Task<T> GetAndReadResponseObject<T>(string url)
         {
-            var json = await ReadGetResponseFromUrl(url);
+            var json = await HandleUnauthorizedAccess(GetAndReadResponseContent(url));
+
             return JsonConvert.DeserializeObject<T>(json);
         }
         
 
-        private async Task<string> ReadPostResponseFromUrl(string url, HttpContent content)
+        private async Task<string> PostAndReadResponseContent(string url, HttpContent content)
         {
             var resp = await client.PostAsync(url, content);
 
-            resp.EnsureSuccessStatusCode();
+            CheckResponseStatus(resp);
+
             return await resp.Content.ReadAsStringAsync();
         }
-        public async Task<T> ReadPostResponseObjectFromUrl<T>(string url, HttpContent content )
+        private async Task<T> PostAndReadResponseObject<T>(string url, HttpContent content )
         {
-            //content.Headers.ContentType.MediaType = "application/json";
-            var json = await ReadPostResponseFromUrl(url, content);
+            var json = await HandleUnauthorizedAccess(PostAndReadResponseContent(url, content));
             return JsonConvert.DeserializeObject<T>(json);
         }
+
+        private async Task<T> HandleUnauthorizedAccess<T>(Task<T> task)
+        {
+            try
+            {
+                return await task;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                ClearLoginData();
+                OnAuthentificationFailed();
+                return await Task.FromResult<T>(default(T));
+            }
+        }
+
+        private void CheckResponseStatus(HttpResponseMessage response)
+        {
+            switch (response.StatusCode)
+            {
+                case System.Net.HttpStatusCode.Unauthorized:
+                    throw new UnauthorizedAccessException();
+                //....
+            }
+            response.EnsureSuccessStatusCode();
+        }
+
+
     }
 }
