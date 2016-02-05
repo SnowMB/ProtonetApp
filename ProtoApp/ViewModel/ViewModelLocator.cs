@@ -15,11 +15,12 @@ namespace ProtoApp.ViewModel
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                Default.Register<IProtonetDataService, DesignDataService>();
+                Default.Register<IProtonetClient, DummyClient>();
+                Default.Register<IProtonetImages, ProtonetImages>();
             }
             else
             {
-                Default.Register<IProtonetImages>(() => new ProtonetImages(DataClient));
+                Default.Register<IProtonetImages, ProtonetImages>();
                 //Default.Register<IProtonetClient>(() => new ProtonetClient("https://192.168.11.2/"));
                 Default.Register<IProtonetClient>(() => new ProtonetClient("https://stier74.protonet.info/"));
             }
@@ -48,11 +49,15 @@ namespace ProtoApp.ViewModel
             DataClient.LoggedOut += LoggedOut;
 
             DataClient.AuthentificationComplete += LoggedIn;
-
-            //DataClient.AuthentificationFailed += (s, e) => { NavigationService.NavigateTo("Login") };
-            DataClient.AuthentificationComplete += (s, e) => NavigationService.NavigateTo("Main");
-            //DataClient.LoggedOut += (s, e) => NavigationService.NavigateTo("Login");
         }
+
+
+
+
+
+
+
+
 
         private void LoggedIn(object sender, EventArgs e)
         {
@@ -72,6 +77,17 @@ namespace ProtoApp.ViewModel
             NavigationService.NavigateTo("Login");
         }
 
+
+
+
+
+
+
+
+
+
+
+
         public MainViewModel Main => Default.GetInstance<MainViewModel>();
 
 
@@ -84,11 +100,11 @@ namespace ProtoApp.ViewModel
         public LoginViewModel Login => Default.GetInstance<LoginViewModel>();
 
 
+
         public IProtonetClient DataClient => Default.GetInstance<IProtonetClient>();
 
         public IProtonetImages ImagesService => Default.GetInstance<IProtonetImages>();
-
-
+        
         public INavigationService NavigationService => Default.GetInstance<INavigationService>();
     }
 }

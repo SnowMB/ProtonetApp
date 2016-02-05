@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using ProtoApp.Objects;
-using Windows.Storage;
 using System.ComponentModel;
 
 namespace ProtoApp
@@ -12,31 +10,38 @@ namespace ProtoApp
     public interface IProtonetClient : INotifyPropertyChanged
     {
         bool IsAuthentificated { get; }
-        Me User { get; }
-
         string Token { get; }
+        Me User { get; }
 
         event EventHandler AuthentificationComplete;
         event EventHandler AuthentificationFailed;
         event EventHandler LoggedOut;
 
-        Task<bool> Authentificate(string tokenString);
-        Task<bool> Authentificate(string user, string password);
+
         void CancelAllRequests();
         void Logout();
-        Task<Meep> CreateMeep(string url, NewMeep meep);
-        Task<Meep> CreateFileMeep(string url, Stream file);
-        Task DownloadToFile(string url, StorageFile file);
-        Task<PrivateChat> GetChat(string url);
-        Task<List<Meep>> GetChatMeeps(string url);
-        Task<List<PrivateChat>> GetChats();
-        Task<Stream> GetDownloadStream(string url);
-        Task<Me> GetMe();
-        Task<TokenResponse> GetToken(string user, string password);
-        void OnAuthentificationComplete();
-        void OnAuthentificationFailed(Exception ex);
-        void OnLoggedOut();
-        Task<T> ReadGetResponseObjectFromUrl<T>(string url);
-        Task<T> ReadPostResponseObjectFromUrl<T>(string url, HttpContent content);
+
+        Task<bool> AuthentificateAsync(string tokenString);
+        Task<bool> AuthentificateAsync(string user, string password);
+        
+
+        Task<Meep> CreateFileMeepAsync(string url, Stream file);
+        Task<Meep> CreateMeepAsync(string url, NewMeep meep);
+
+        //Task<TokenResponse> GetTokenAsync(string user, string password);
+
+        Task<Me> GetMeAsync();
+        Task<List<User>> GetUsersAsync(string url);
+        Task<User> GetUserAsync(string url);
+
+        Task<List<PrivateChat>> GetChatsAsync(string url);
+        Task<PrivateChat> GetChatAsync(string url);
+
+        Task<List<Meep>> GetMeepsAsync(string url);
+        Task<Meep> GetMeepAsync(string url);
+
+        Task<Stream> GetDownloadStreamAsync(string url);
+        
+        
     }
 }

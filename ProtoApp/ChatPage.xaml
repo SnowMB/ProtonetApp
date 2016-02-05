@@ -9,9 +9,14 @@
     mc:Ignorable="d"
     DataContext="{Binding Chat, Source={StaticResource Locator}}">
 
-    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         
-        <ListView RelativePanel.Above="text" ItemsSource="{Binding Meeps}">
+        <ListView Grid.Row="0"
+                  ItemsSource="{Binding Meeps}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="10" Background="Aqua">
@@ -34,11 +39,27 @@
             </ListView.ItemTemplate>
             
         </ListView>
-        <StackPanel x:Name="text" RelativePanel.AlignBottomWithPanel="True" Grid.Row="1" Orientation="Horizontal">
-            <TextBox Width="250" x:Name="messageBox"></TextBox>
-            <Button Command="{Binding SendCommand}" CommandParameter="{Binding Text, ElementName=messageBox}">Senden</Button>
-            <Button Command="{Binding SendFileCommand}"><SymbolIcon Symbol="Pictures"></SymbolIcon></Button>
+        <Grid x:Name="text" 
+              Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="messageBox"
+                     Grid.Column="0"/>
+            <Button x:Name="send" 
+                    Grid.Column="2"
+                    Command="{Binding SendCommand}" 
+                    CommandParameter="{Binding Text, ElementName=messageBox}"
+                    Content="Senden"/>
+            <Button x:Name="symbol"
+                    Grid.Column="1"
+                    RelativePanel.LeftOf="send" 
+                    Command="{Binding SendFileCommand}">
+                <SymbolIcon Symbol="Pictures"></SymbolIcon>
+            </Button>
             
-        </StackPanel>
-    </RelativePanel>
+        </Grid>
+    </Grid>
 </local:ViewModelPage>

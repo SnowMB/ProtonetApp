@@ -34,7 +34,7 @@ namespace ProtoApp.ViewModel
         public async Task loadChats()
         {
             Chats.Clear();
-            var newChats = await client.GetChats();
+            var newChats = await client.GetChatsAsync(client.User.PrivateChatsUrl);
             foreach(var chat in newChats)
                 Chats.Add(chat);
         }

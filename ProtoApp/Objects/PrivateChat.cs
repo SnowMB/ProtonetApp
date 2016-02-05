@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace ProtoApp.Objects
@@ -12,7 +13,7 @@ namespace ProtoApp.Objects
         public Meep LastMeep { get; set; }
 
         [JsonProperty(PropertyName = "last_meep_date")]
-        public string LastMeepDate { get; set; }
+        public DateTime LastMeepDate { get; set; }
 
         [JsonProperty(PropertyName = "current_meep_number")]
         public int CurrentMeepNumber { get; set; }
@@ -25,5 +26,8 @@ namespace ProtoApp.Objects
 
         [JsonProperty(PropertyName = "other_users")]
         public List<User> OtherUsers { get; set; }
+
+        [JsonProperty(PropertyName = "other_user")]
+        public User OtherUser { get; set; }
     }
 }

@@ -105,7 +105,7 @@ namespace ProtoApp
 
             try
             {
-                dl = await service.GetDownloadStream(url);
+                dl = await service.GetDownloadStreamAsync(url);
 
                 var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 

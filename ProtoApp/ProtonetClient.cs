@@ -51,13 +51,13 @@ namespace ProtoApp
         }
 
         public event EventHandler AuthentificationComplete;
-        public void OnAuthentificationComplete() => AuthentificationComplete?.Invoke(this, EventArgs.Empty);
+        private void OnAuthentificationComplete() => AuthentificationComplete?.Invoke(this, EventArgs.Empty);
 
         public event EventHandler AuthentificationFailed;
-        public void OnAuthentificationFailed() => AuthentificationFailed?.Invoke(this, EventArgs.Empty);
+        private void OnAuthentificationFailed() => AuthentificationFailed?.Invoke(this, EventArgs.Empty);
 
         public event EventHandler LoggedOut;
-        public void OnLoggedOut() => LoggedOut?.Invoke(this, EventArgs.Empty);
+        private void OnLoggedOut() => LoggedOut?.Invoke(this, EventArgs.Empty);
 
 
 
@@ -81,7 +81,7 @@ namespace ProtoApp
 
 
         
-        public async Task<bool> Authentificate (string tokenString)
+        public async Task<bool> AuthentificateAsync (string tokenString)
         {
             ClearLoginData();
 
@@ -95,11 +95,11 @@ namespace ProtoApp
 
         
 
-        public async Task<bool> Authentificate(string user, string password)
+        public async Task<bool> AuthentificateAsync(string user, string password)
         {
             ClearLoginData();
 
-            var tokenResp = await GetToken(user, password);
+            var tokenResp = await GetTokenAsync(user, password);
 
             if (string.IsNullOrWhiteSpace(tokenResp?.Token))
                 return false;
@@ -114,7 +114,7 @@ namespace ProtoApp
         private async Task CreateAuthentificatedClientSettings()
         {
             client.DefaultRequestHeaders.Add("X-Protonet-Token", Token);
-            User = await GetMe();
+            User = await GetMeAsync();
 
             OnAuthentificationComplete();
         }
@@ -134,24 +134,7 @@ namespace ProtoApp
         }
 
 
-
-
-
-
-
-
-
-
-
-        
-        public async Task<Me> GetMe ()
-        {
-            var response = await GetAndReadResponseObject<MeContainer>(ME);
-            
-            return response?.Me;
-        }
-
-        public async Task<TokenResponse> GetToken(string user, string password)
+        public async Task<TokenResponse> GetTokenAsync(string user, string password)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, TOKEN);
             
@@ -162,25 +145,36 @@ namespace ProtoApp
             return await SendAndReadResponseObject<TokenResponse>(request);
         }
 
-        public async Task<List<PrivateChat>> GetChats()
+
+        
+        public async Task<Me> GetMeAsync ()
         {
-            var responseObject = await GetAndReadResponseObject<PrivateChatsContainer>(User.PrivateChatsUrl);
+            var response = await GetAndReadResponseObject<MeContainer>(ME);
+            
+            return response?.Me;
+        }
+
+        
+
+        public async Task<List<PrivateChat>> GetChatsAsync(string url)
+        {
+            var responseObject = await GetAndReadResponseObject<PrivateChatsContainer>(url);
             return responseObject?.Chats;
         } 
 
-        public async Task<PrivateChat> GetChat(string url)
+        public async Task<PrivateChat> GetChatAsync(string url)
         {
             var responseObject = await GetAndReadResponseObject<PrivateChatContainer>(url);
             return responseObject?.Chat;
         }
 
-        public async Task<List<Meep>> GetChatMeeps(string url)
+        public async Task<List<Meep>> GetMeepsAsync(string url)
         {
             var responseObject = await GetAndReadResponseObject<MeepsContainer>(url);
             return responseObject?.Meeps;
         } 
 
-        public async Task<Meep> CreateMeep (string url, NewMeep meep)
+        public async Task<Meep> CreateMeepAsync (string url, NewMeep meep)
         {
             var json = JsonConvert.SerializeObject(meep);
             var content = new StringContent(json);
@@ -189,7 +183,7 @@ namespace ProtoApp
             return responseObject.Meep;
         }
 
-        public async Task<Meep> CreateFileMeep (string url, Stream file)
+        public async Task<Meep> CreateFileMeepAsync (string url, Stream file)
         {
             var content = new StreamContent(file);
             //content.Headers.ContentType.MediaType = "application/octet-stream";
@@ -201,31 +195,48 @@ namespace ProtoApp
 
         
 
-        public async Task<Stream> GetDownloadStream(string url)
+        public async Task<Stream> GetDownloadStreamAsync(string url)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var resp = await HandleUnauthorizedAccess(client.SendAsync(request));
-            return await resp?.Content?.ReadAsStreamAsync();
-            
+            return await GetAndReadResponseAsStream(url);
         }
 
 
 
-        private async Task<Stream> SendAndReadResponseStream(string url)
+        public Task<List<User>> GetUsersAsync(string url)
         {
-            var response = await HandleUnauthorizedAccess(new Task<HttpResponseMessage> (async () =>
-           {
-               var resp = await client.GetAsync(url);
-               CheckResponseStatus(resp);
-               return resp;
-           }));
-            
+            throw new NotImplementedException();
+        }
+
+        public Task<User> GetUserAsync(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<Meep> GetMeepAsync(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
+        private async Task<Stream> GetAndReadResponseAsStream(string url)
+        {
+            var response = await HandleUnauthorizedAccess(GetAsync(url));
 
             return await response.Content.ReadAsStreamAsync();
         }
 
+        private async Task<HttpResponseMessage> GetAsync(string url)
+        {
+            var resp = await client.GetAsync(url);
+            CheckResponseStatus(resp);
+            return resp;
+        }
+
         
-        private async Task<string> SendAndReadResponseContent(HttpRequestMessage message)
+        private async Task<string> SendAndReadResponseAsString(HttpRequestMessage message)
         {
             var resp = await client.SendAsync(message);
             CheckResponseStatus(resp);
@@ -234,30 +245,28 @@ namespace ProtoApp
         }
         private async Task<T> SendAndReadResponseObject<T>(HttpRequestMessage message)
         {
-            var json = await HandleUnauthorizedAccess(SendAndReadResponseContent(message));
+            var json = await HandleUnauthorizedAccess(SendAndReadResponseAsString(message));
 
             return JsonConvert.DeserializeObject<T>(json);
         }
 
  
-        private async Task<string> GetAndReadResponseContent(string url)
+        private async Task<string> GetAndReadResponseAsString(string url)
         {
-            var resp = await client.GetAsync(url);
-
-            CheckResponseStatus(resp);
+            var resp = await GetAsync(url);
 
             return await resp.Content.ReadAsStringAsync();
 
         }
         private async Task<T> GetAndReadResponseObject<T>(string url)
         {
-            var json = await HandleUnauthorizedAccess(GetAndReadResponseContent(url));
+            var json = await HandleUnauthorizedAccess(GetAndReadResponseAsString(url));
 
             return JsonConvert.DeserializeObject<T>(json);
         }
         
 
-        private async Task<string> PostAndReadResponseContent(string url, HttpContent content)
+        private async Task<string> PostAndReadResponseAsString(string url, HttpContent content)
         {
             var resp = await client.PostAsync(url, content);
 
@@ -267,7 +276,7 @@ namespace ProtoApp
         }
         private async Task<T> PostAndReadResponseObject<T>(string url, HttpContent content )
         {
-            var json = await HandleUnauthorizedAccess(PostAndReadResponseContent(url, content));
+            var json = await HandleUnauthorizedAccess(PostAndReadResponseAsString(url, content));
             return JsonConvert.DeserializeObject<T>(json);
         }
 
@@ -281,7 +290,7 @@ namespace ProtoApp
             {
                 ClearLoginData();
                 OnAuthentificationFailed();
-                return await Task.FromResult<T>(default(T));
+                return await Task.FromResult(default(T));
             }
         }
 
@@ -296,6 +305,6 @@ namespace ProtoApp
             response.EnsureSuccessStatusCode();
         }
 
-
+        
     }
 }

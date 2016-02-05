@@ -31,7 +31,7 @@ namespace ProtoApp.ViewModel
         
         private async Task LoginAsync(string s)
         {
-            await client.Authentificate(Name, s);
+            await client.AuthentificateAsync(Name, s);
         }
 
 

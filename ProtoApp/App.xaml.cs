@@ -104,7 +104,7 @@ namespace ProtoApp
                 {
                     var cred = vault.FindAllByResource("ProtonetApp").Single();
                     cred.RetrievePassword();
-                    await Locator.DataClient.Authentificate(cred.Password);
+                    await Locator.DataClient.AuthentificateAsync(cred.Password);
                 }
                 catch (COMException)
                 {

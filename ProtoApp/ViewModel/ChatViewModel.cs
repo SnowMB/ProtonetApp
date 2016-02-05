@@ -54,7 +54,7 @@ namespace ProtoApp.ViewModel
         {
             try
             {
-                var meep = await client.CreateMeep(Chat.MeepsUrl, new NewMeep() { Message = s });
+                var meep = await client.CreateMeepAsync(Chat.MeepsUrl, new NewMeep() { Message = s });
                 Meeps.Add(CreateFileMeep(meep));
             }
             catch(Exception ex)
@@ -74,7 +74,7 @@ namespace ProtoApp.ViewModel
                 if (file != null)
                 {
                     var read = await file.OpenReadAsync().AsTask();
-                    var meep = await client.CreateFileMeep(chat.MeepsUrl, read.AsStreamForRead());
+                    var meep = await client.CreateFileMeepAsync(chat.MeepsUrl, read.AsStreamForRead());
                     Meeps.Add(CreateFileMeep(meep));
                 }
             }
@@ -89,9 +89,9 @@ namespace ProtoApp.ViewModel
 
         public async Task loadChat(string url)
         {
-            Chat = await client.GetChat(url);
+            Chat = await client.GetChatAsync(url);
             Meeps.Clear();
-            var meeps = await client.GetChatMeeps(Chat.MeepsUrl);
+            var meeps = await client.GetMeepsAsync(Chat.MeepsUrl);
             foreach (var m in meeps)
             {
                 var filemeep = await GetLocalFiles(m);

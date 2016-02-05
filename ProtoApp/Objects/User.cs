@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace ProtoApp.Objects
 {
@@ -21,7 +22,7 @@ namespace ProtoApp.Objects
         public string UserName { get; set; }
 
         [JsonProperty(PropertyName = "last_active_at")]
-        public string LastActiveAt { get; set; }
+        public DateTime LastActiveAt { get; set; }
 
         public bool Online { get; set; }
     }
