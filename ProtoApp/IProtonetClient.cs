@@ -21,8 +21,8 @@ namespace ProtoApp
         void CancelAllRequests();
         void Logout();
 
-        Task<bool> AuthentificateAsync(string tokenString);
-        Task<bool> AuthentificateAsync(string user, string password);
+        Task<bool> AuthentificateAsync(string server, string tokenString);
+        Task<bool> AuthentificateAsync(string server, string user, string password);
         
 
         Task<Meep> CreateFileMeepAsync(string url, Stream file);
@@ -30,7 +30,7 @@ namespace ProtoApp
 
         //Task<TokenResponse> GetTokenAsync(string user, string password);
 
-        Task<Me> GetMeAsync();
+        Task<Me> GetMeAsync(string url);
         Task<List<User>> GetUsersAsync(string url);
         Task<User> GetUserAsync(string url);
 

@@ -10,6 +10,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Width="200" Height="200">
+            <TextBlock>Server</TextBlock>
+            <TextBox Text="{Binding Server, Mode=TwoWay}"></TextBox>
             <TextBlock>Account</TextBlock>
             <TextBox Text="{Binding Name, Mode=TwoWay}"></TextBox>
             <TextBlock>Passwort</TextBlock>

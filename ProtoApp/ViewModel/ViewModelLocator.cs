@@ -64,6 +64,9 @@ namespace ProtoApp.ViewModel
             var vault = new PasswordVault();
             vault.Add(new PasswordCredential("ProtonetApp", DataClient.User.UserName, DataClient.Token));
 
+            Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values["server"] = DataClient.User.Url;
+
             NavigationService.NavigateTo("Main");
         }
 
@@ -73,6 +76,9 @@ namespace ProtoApp.ViewModel
             var cred = vault.FindAllByResource("ProtonetApp");
             foreach (var c in cred)
                 vault.Remove(c);
+
+            Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.DeleteContainer("server");
 
             NavigationService.NavigateTo("Login");
         }
