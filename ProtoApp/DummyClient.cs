@@ -59,7 +59,7 @@ namespace ProtoApp
                 CurrentMeepNumber = 0,
                 ID = 0,
                 LastMeep = await GetMeepAsync(""),
-                LastMeepDate = DateTime.Now,
+                LastMeepDate = DateTime.Now.ToString(),
                 MeepsUrl = "sdjlöal",
                 NotificationID = 0,
                 OtherUsers = new List<User>() { await GetUserAsync("") },
