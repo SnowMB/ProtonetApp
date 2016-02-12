@@ -13,7 +13,7 @@ namespace ProtoApp.Objects
         public Meep LastMeep { get; set; }
 
         [JsonProperty(PropertyName = "last_meep_date")]
-        public DateTime LastMeepDate { get; set; }
+        public string LastMeepDate { get; set; }
 
         [JsonProperty(PropertyName = "current_meep_number")]
         public int CurrentMeepNumber { get; set; }
