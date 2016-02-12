@@ -15,6 +15,8 @@ namespace ProtoApp.ViewModel
     {
         public string Name { get; set; } = "";
 
+        public string Server { get; set; } = "";
+
 
         public ICommand LoginCommand => new RelayCommand<string>(async s => await LoginAsync(s));
 
@@ -25,10 +27,11 @@ namespace ProtoApp.ViewModel
         {
             client = protoClient;
             navigation = navigationService;
+
+            Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            Server = localSettings.Values["server"] as string;
         }
 
-
-        
         private async Task LoginAsync(string s)
         {
             await client.AuthentificateAsync(Name, s);

@@ -37,6 +37,8 @@ namespace ProtoApp
                     RaisePropertyChanged(nameof(IsAuthentificated));
             }
         }
+
+        public string Server => User?.Url.Replace(ME, "").Replace(API, "");
         
 
 
@@ -61,19 +63,11 @@ namespace ProtoApp
 
 
 
-
         private HttpClient client = new HttpClient();
 
-        public ProtonetClient(string url)
+        public ProtonetClient()//string url)
         {
-            if (!url.EndsWith(API))
-            {
-                if (!url.EndsWith("/"))
-                    url += "/";
-                url += API;
-            }
-
-            client.BaseAddress = new Uri(url);
+            //client.BaseAddress = new Uri(url);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -81,13 +75,14 @@ namespace ProtoApp
 
 
         
-        public async Task<bool> AuthentificateAsync (string tokenString)
+        public async Task<bool> AuthentificateAsync (string server, string tokenString)
         {
             ClearLoginData();
 
             Token = tokenString;
 
-            await CreateAuthentificatedClientSettings();
+            var meUrl = CreateValidMeUrl(server);
+            await CreateAuthentificatedClientSettings(meUrl);
             
 
             return true;
@@ -95,26 +90,58 @@ namespace ProtoApp
 
         
 
-        public async Task<bool> AuthentificateAsync(string user, string password)
+        public async Task<bool> AuthentificateAsync(string server, string user, string password)
         {
             ClearLoginData();
 
-            var tokenResp = await GetTokenAsync(user, password);
+            var url = CreateValidTokenUrl(server);
+
+            var tokenResp = await GetTokenAsync(server, user, password);
 
             if (string.IsNullOrWhiteSpace(tokenResp?.Token))
                 return false;
 
             Token = tokenResp.Token;
 
-            await CreateAuthentificatedClientSettings();
+            string meUrl = CreateValidMeUrl(server);
+            await CreateAuthentificatedClientSettings(meUrl);
 
             return true;
         }
 
-        private async Task CreateAuthentificatedClientSettings()
+        private string CreateValidMeUrl(string url)
+        {
+            if (!url.EndsWith(ME))
+            {
+                if (!url.EndsWith(API))
+                {
+                    if (!url.EndsWith("/"))
+                        url += "/";
+                    url += API;
+                }
+            }
+            return url;
+        }
+
+        private static string CreateValidTokenUrl(string url)
+        {
+            if (!url.EndsWith(TOKEN))
+            {
+                if (!url.EndsWith(API))
+                {
+                    if (!url.EndsWith("/"))
+                        url += "/";
+                    url += API;
+                }
+            }
+
+            return url;
+        }
+
+        private async Task CreateAuthentificatedClientSettings(string meUrl)
         {
             client.DefaultRequestHeaders.Add("X-Protonet-Token", Token);
-            User = await GetMeAsync();
+            User = await GetMeAsync(meUrl);
 
             OnAuthentificationComplete();
         }
@@ -134,9 +161,9 @@ namespace ProtoApp
         }
 
 
-        public async Task<TokenResponse> GetTokenAsync(string user, string password)
+        public async Task<TokenResponse> GetTokenAsync(string url, string user, string password)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, TOKEN);
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
             
             var cred = $"{user}:{password}";
             var crypt = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(cred));
@@ -147,9 +174,9 @@ namespace ProtoApp
 
 
         
-        public async Task<Me> GetMeAsync ()
+        public async Task<Me> GetMeAsync (string url)
         {
-            var response = await GetAndReadResponseObject<MeContainer>(ME);
+            var response = await GetAndReadResponseObject<MeContainer>(url);
             
             return response?.Me;
         }

@@ -196,5 +196,15 @@ namespace ProtoApp
                 User = await GetUserAsync("")
             };
         }
+
+        public Task<bool> AuthentificateAsync(string server, string user, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Me> GetMeAsync(string url)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
