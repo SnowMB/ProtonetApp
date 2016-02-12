@@ -110,13 +110,7 @@ namespace ProtoApp
                 {
                     Debug.WriteLine("Keine Anmeldeinformationen gefunden!");
                 }
-                
-                //NUR FÜR TESTS!
-#if DEBUG
-                //await Locator.DataClient.Authentificate("marc.brueckner", "ProtonetAPI");
-                //await Locator.DataClient.Authentificate("failed", "login");
-#endif
-                
+                               
             }
             // Sicherstellen, dass das aktuelle Fenster aktiv ist
             Window.Current.Activate();
