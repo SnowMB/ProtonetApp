@@ -22,11 +22,13 @@ namespace ProtoApp.ViewModel
 
         private IProtonetClient client;
         private INavigationService navigation;
+    private IDialogService dialog;
 
-        public LoginViewModel(IProtonetClient protoClient, INavigationService navigationService)
+    public LoginViewModel(IProtonetClient protoClient, INavigationService navigationService, IDialogService dialogService)
         {
             client = protoClient;
             navigation = navigationService;
+      dialog = dialogService;
 
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             Server = localSettings.Values["server"] as string;
@@ -34,7 +36,15 @@ namespace ProtoApp.ViewModel
 
         private async Task LoginAsync(string s)
         {
-            await client.AuthentificateAsync(Name, s);
+      try
+      {
+        await client.AuthentificateAsync ( Server, Name, s );
+      }
+      catch(Exception ex)
+      {
+        await dialog.ShowMessage ( ex.ToString (), "Error" );
+      }
+        
         }
 
 
