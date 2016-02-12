@@ -43,80 +43,82 @@ namespace ProtoApp
             this.Suspending += OnSuspending;
         }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn die Anwendung durch den Endbenutzer normal gestartet wird. Weitere Einstiegspunkte
-        /// werden z. B. verwendet, wenn die Anwendung gestartet wird, um eine bestimmte Datei zu öffnen.
-        /// </summary>
-        /// <param name="e">Details über Startanforderung und -prozess.</param>
-        protected async override void OnLaunched(LaunchActivatedEventArgs e)
-        {
+    /// <summary>
+    /// Wird aufgerufen, wenn die Anwendung durch den Endbenutzer normal gestartet wird. Weitere Einstiegspunkte
+    /// werden z. B. verwendet, wenn die Anwendung gestartet wird, um eine bestimmte Datei zu öffnen.
+    /// </summary>
+    /// <param name="e">Details über Startanforderung und -prozess.</param>
+    protected async override void OnLaunched ( LaunchActivatedEventArgs e )
+    {
 
 #if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-            {
-                //this.DebugSettings.EnableFrameRateCounter = true;
-            }
+      if ( System.Diagnostics.Debugger.IsAttached )
+      {
+        //this.DebugSettings.EnableFrameRateCounter = true;
+      }
 #endif
 
-            Frame rootFrame = Window.Current.Content as Frame;
+      Frame rootFrame = Window.Current.Content as Frame;
 
-            // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
-            // Nur sicherstellen, dass das Fenster aktiv ist.
-            if (rootFrame == null)
-            {
-                // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
-                rootFrame = new Frame();
+      // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
+      // Nur sicherstellen, dass das Fenster aktiv ist.
+      if ( rootFrame == null )
+      {
+        // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
+        rootFrame = new Frame ();
 
-                rootFrame.Navigated += OnNavigated;
+        rootFrame.Navigated += OnNavigated;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Zustand von zuvor angehaltener Anwendung laden
-                }
-
-                // Den Frame im aktuellen Fenster platzieren
-                Window.Current.Content = rootFrame;
-
-                // Register a handler for BackRequested events and set the
-                // visibility of the Back button
-                SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
-
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-                    rootFrame.CanGoBack ?
-                    AppViewBackButtonVisibility.Visible :
-                    AppViewBackButtonVisibility.Collapsed;
-            }
-
-            if (rootFrame.Content == null)
-            {
-                // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
-                // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
-                // übergeben werden
-                //rootFrame.Navigate(typeof(MainPage), e.Arguments);
-
-
-                Locator.NavigationService.NavigateTo("Login");
-
-                //Anmelden
-
-                var vault = new PasswordVault();
-                try
-                {
-                    var cred = vault.FindAllByResource("ProtonetApp").Single();
-                    cred.RetrievePassword();
-                    Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                    var server =  localSettings.Values["server"] as string;
-                    await Locator.DataClient.AuthentificateAsync(server, cred.Password);
-                }
-                catch (COMException)
-                {
-                    Debug.WriteLine("Keine Anmeldeinformationen gefunden!");
-                }
-                               
-            }
-            // Sicherstellen, dass das aktuelle Fenster aktiv ist
-            Window.Current.Activate();
+        if ( e.PreviousExecutionState == ApplicationExecutionState.Terminated )
+        {
+          //TODO: Zustand von zuvor angehaltener Anwendung laden
         }
+
+        // Den Frame im aktuellen Fenster platzieren
+        Window.Current.Content = rootFrame;
+
+        // Register a handler for BackRequested events and set the
+        // visibility of the Back button
+        SystemNavigationManager.GetForCurrentView ().BackRequested += OnBackRequested;
+
+        SystemNavigationManager.GetForCurrentView ().AppViewBackButtonVisibility =
+            rootFrame.CanGoBack ?
+            AppViewBackButtonVisibility.Visible :
+            AppViewBackButtonVisibility.Collapsed;
+      }
+
+      if ( rootFrame.Content == null )
+      {
+        // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
+        // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
+        // übergeben werden
+        //rootFrame.Navigate(typeof(MainPage), e.Arguments);
+
+
+        Locator.NavigationService.NavigateTo ( "Login" );
+
+        //Anmelden
+
+        var vault = new PasswordVault();
+        try
+        {
+
+          var cred = vault.FindAllByResource("ProtonetApp").Single();
+          cred.RetrievePassword ();
+          Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+          var server =  localSettings.Values["server"] as string;
+          if ( server != null )
+            await Locator.DataClient.AuthentificateAsync ( server, cred.Password );
+        }
+        catch ( COMException )
+        {
+          Debug.WriteLine ( "Keine Anmeldeinformationen gefunden!" );
+        }
+
+      }
+      // Sicherstellen, dass das aktuelle Fenster aktiv ist
+      Window.Current.Activate ();
+    }
 
 
         private void OnNavigated(object sender, NavigationEventArgs e)

@@ -22,7 +22,7 @@ namespace ProtoApp.ViewModel
             {
                 Default.Register<IProtonetImages, ProtonetImages>();
                 //Default.Register<IProtonetClient>(() => new ProtonetClient("https://192.168.11.2/"));
-                Default.Register<IProtonetClient>(() => new ProtonetClient("https://stier74.protonet.info/"));
+                Default.Register<IProtonetClient>(() => new ProtonetClient());
             }
 
             //ViewModels
@@ -65,7 +65,7 @@ namespace ProtoApp.ViewModel
             vault.Add(new PasswordCredential("ProtonetApp", DataClient.User.UserName, DataClient.Token));
 
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["server"] = DataClient.User.Url;
+            localSettings.Values["server"] = DataClient.Server;
 
             NavigationService.NavigateTo("Main");
         }

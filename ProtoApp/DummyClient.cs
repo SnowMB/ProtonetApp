@@ -22,7 +22,23 @@ namespace ProtoApp
             }
         }
 
-        public event EventHandler AuthentificationComplete;
+    public object Server
+    {
+      get
+      {
+        throw new NotImplementedException ();
+      }
+    }
+
+    string IProtonetClient.Server
+    {
+      get
+      {
+        throw new NotImplementedException ();
+      }
+    }
+
+    public event EventHandler AuthentificationComplete;
         public event EventHandler AuthentificationFailed;
         public event EventHandler LoggedOut;
 

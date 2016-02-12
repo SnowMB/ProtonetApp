@@ -38,7 +38,7 @@ namespace ProtoApp
             }
         }
 
-        public string Server => User?.Url.Replace(ME, "").Replace(API, "");
+        public string Server => User?.UserUrl.Replace( "users", "").Replace(API, "");
         
 
 
@@ -96,7 +96,7 @@ namespace ProtoApp
 
             var url = CreateValidTokenUrl(server);
 
-            var tokenResp = await GetTokenAsync(server, user, password);
+            var tokenResp = await GetTokenAsync(url, user, password);
 
             if (string.IsNullOrWhiteSpace(tokenResp?.Token))
                 return false;
@@ -119,6 +119,7 @@ namespace ProtoApp
                         url += "/";
                     url += API;
                 }
+        url += ME;
             }
             return url;
         }
@@ -133,6 +134,7 @@ namespace ProtoApp
                         url += "/";
                     url += API;
                 }
+        url += TOKEN;
             }
 
             return url;
