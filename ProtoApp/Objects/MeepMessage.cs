@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProtoApp.Objects
 {
-    public class NewMeep
+    public class MeepMessage
     {
         [JsonProperty(PropertyName="message")]
         public string Message { get; set; }
