@@ -1,0 +1,24 @@
+﻿<Page
+    x:Class="ProtoApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProtoApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding Main, Source={StaticResource Locator}}">
+
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+        <TextBlock RelativePanel.AlignHorizontalCenterWithPanel="True" 
+                   RelativePanel.AlignTopWithPanel="True">
+            ProtonetApp
+        </TextBlock>    
+        <StackPanel RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                
+                <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding NavigateChatsCommand}">Chats</Button>
+                <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding LogoutCommand}">Logout</Button>
+            </StackPanel>
+
+    </RelativePanel>
+    
+</Page>
