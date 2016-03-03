@@ -54,7 +54,7 @@ namespace ProtoApp.ViewModel
         {
             try
             {
-                var meep = await client.CreateMeepAsync(Chat.MeepsUrl, new NewMeep() { Message = s });
+                var meep = await client.CreateMeepAsync(Chat.MeepsUrl, new MeepMessage() { Message = s });
                 Meeps.Add(CreateFileMeep(meep));
             }
             catch(Exception ex)

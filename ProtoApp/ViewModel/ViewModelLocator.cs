@@ -67,6 +67,8 @@ namespace ProtoApp.ViewModel
             Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             localSettings.Values["server"] = DataClient.Server;
 
+            DataClient.CreatePushNotificationChannel("");
+
             NavigationService.NavigateTo("Main");
         }
 

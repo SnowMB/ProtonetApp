@@ -62,7 +62,7 @@ namespace ProtoApp
             throw new NotImplementedException();
         }
 
-        public Task<Meep> CreateMeepAsync(string url, NewMeep meep)
+        public Task<Meep> CreateMeepAsync(string url, MeepMessage meep)
         {
             throw new NotImplementedException();
         }
@@ -219,6 +219,11 @@ namespace ProtoApp
         }
 
         public Task<Me> GetMeAsync(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreatePushNotificationChannel(string url)
         {
             throw new NotImplementedException();
         }

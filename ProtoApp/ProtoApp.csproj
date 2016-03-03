@@ -107,8 +107,10 @@
     <Compile Include="DummyClient.cs" />
     <Compile Include="IProtonetClient.cs" />
     <Compile Include="IProtonetImages.cs" />
+    <Compile Include="Objects\Device.cs" />
+    <Compile Include="Objects\DeviceMessage.cs" />
     <Compile Include="Objects\MeContainer.cs" />
-    <Compile Include="Objects\NewMeep.cs" />
+    <Compile Include="Objects\MeepMessage.cs" />
     <Compile Include="ProtonetClient.cs" />
     <Compile Include="StorageFileToImageConverter.cs" />
     <Compile Include="ViewModelPage.cs" />

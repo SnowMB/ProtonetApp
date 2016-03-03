@@ -24,10 +24,11 @@ namespace ProtoApp
 
         Task<bool> AuthentificateAsync(string server, string tokenString);
         Task<bool> AuthentificateAsync(string server, string user, string password);
-        
+
+        Task CreatePushNotificationChannel(string url);
 
         Task<Meep> CreateFileMeepAsync(string url, Stream file);
-        Task<Meep> CreateMeepAsync(string url, NewMeep meep);
+        Task<Meep> CreateMeepAsync(string url, MeepMessage meep);
 
         //Task<TokenResponse> GetTokenAsync(string user, string password);
 

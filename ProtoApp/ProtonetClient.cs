@@ -3,11 +3,14 @@ using Newtonsoft.Json;
 using ProtoApp.Objects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Networking.PushNotifications;
 using Windows.Storage;
 
 namespace ProtoApp
@@ -203,7 +206,7 @@ namespace ProtoApp
             return responseObject?.Meeps;
         } 
 
-        public async Task<Meep> CreateMeepAsync (string url, NewMeep meep)
+        public async Task<Meep> CreateMeepAsync (string url, MeepMessage meep)
         {
             var json = JsonConvert.SerializeObject(meep);
             var content = new StringContent(json);
@@ -250,6 +253,78 @@ namespace ProtoApp
 
 
 
+
+
+
+        public async Task CreatePushNotificationChannel(string url)
+        {
+            PushNotificationChannel channel = null;
+
+            try
+            {
+                channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+
+
+                var message = new DeviceMessage()
+                {
+                    UserID = User.ID,
+                    Token = channel.Uri,
+                    Platform = "windows",
+                    //Uuid = Guid.NewGuid().ToString().Replace("-",""),
+                    //Uuid = "2b6f0cc904d137be2e1730235f5664094b831186",
+                    Uuid = Guid.NewGuid(),
+                    AppName = "ProtonetApp",
+                    Model = "PC",
+                    AppVersion = "0.1"
+                };
+
+                var content = new StringContent(JsonConvert.SerializeObject(message));
+                content.Headers.ContentType.MediaType = "application/json";
+
+                var dev = await PostAndReadResponseObject<Device>(User.DevicesUrl, content);
+
+                //// Create the web request.
+                //HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
+                //webRequest.Method = "POST";
+                //webRequest.ContentType = "application/x-www-form-urlencoded";
+                //byte[] channelUriInBytes = System.Text.Encoding.UTF8.GetBytes("ChannelUri=" + channel.Uri);
+
+                // Write the channel URI to the request stream.
+                //Stream requestStream = await webRequest.GetRequestStreamAsync();
+                //requestStream.Write(channelUriInBytes, 0, channelUriInBytes.Length);
+
+                //try
+                //{
+                //    // Get the response from the server.
+                //    WebResponse response = await webRequest.GetResponseAsync();
+                //    StreamReader requestReader = new StreamReader(response.GetResponseStream());
+                //    String webResponse = requestReader.ReadToEnd();
+                //}
+
+                //catch (Exception ex)
+                //{
+                //    // Could not send channel URI to server.
+                //}
+            }
+
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         private async Task<Stream> GetAndReadResponseAsStream(string url)
         {
             var response = await HandleUnauthorizedAccess(GetAsync(url));
@@ -260,7 +335,7 @@ namespace ProtoApp
         private async Task<HttpResponseMessage> GetAsync(string url)
         {
             var resp = await client.GetAsync(url);
-            CheckResponseStatus(resp);
+            await CheckResponseStatus(resp);
             return resp;
         }
 
@@ -268,7 +343,7 @@ namespace ProtoApp
         private async Task<string> SendAndReadResponseAsString(HttpRequestMessage message)
         {
             var resp = await client.SendAsync(message);
-            CheckResponseStatus(resp);
+            await CheckResponseStatus(resp);
 
             return await resp.Content.ReadAsStringAsync();
         }
@@ -299,7 +374,7 @@ namespace ProtoApp
         {
             var resp = await client.PostAsync(url, content);
 
-            CheckResponseStatus(resp);
+            await CheckResponseStatus(resp);
 
             return await resp.Content.ReadAsStringAsync();
         }
@@ -323,12 +398,14 @@ namespace ProtoApp
             }
         }
 
-        private void CheckResponseStatus(HttpResponseMessage response)
+        private async Task CheckResponseStatus(HttpResponseMessage response)
         {
             switch (response.StatusCode)
             {
                 case System.Net.HttpStatusCode.Unauthorized:
                     throw new UnauthorizedAccessException();
+                case HttpStatusCode.BadRequest:
+                    Debug.WriteLine(await response.Content.ReadAsStringAsync()); break;
                 //....
             }
             response.EnsureSuccessStatusCode();
