@@ -283,6 +283,7 @@ namespace ProtoApp
 
                 var dev = await PostAndReadResponseObject<Device>(User.DevicesUrl, content);
 
+        channel.PushNotificationReceived += Channel_PushNotificationReceived;
                 //// Create the web request.
                 //HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
                 //webRequest.Method = "POST";
@@ -313,19 +314,12 @@ namespace ProtoApp
             }
         }
 
+    private void Channel_PushNotificationReceived ( PushNotificationChannel sender, PushNotificationReceivedEventArgs args )
+    {
+      throw new NotImplementedException ();
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-        private async Task<Stream> GetAndReadResponseAsStream(string url)
+    private async Task<Stream> GetAndReadResponseAsStream(string url)
         {
             var response = await HandleUnauthorizedAccess(GetAsync(url));
 

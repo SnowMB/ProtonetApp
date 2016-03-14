@@ -7,18 +7,39 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     DataContext="{Binding Main, Source={StaticResource Locator}}">
+    
+    
+    <Grid Background="Gray" >
+        <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
-        <TextBlock RelativePanel.AlignHorizontalCenterWithPanel="True" 
-                   RelativePanel.AlignTopWithPanel="True">
-            ProtonetApp
-        </TextBlock>    
+            <ListView Grid.Column="0" ItemsSource="{Binding Chats}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding DataContext.NavigateChatCommand, ElementName=window}" CommandParameter="{Binding Url}">
+                            <StackPanel>
+                                <Image Source="{Binding OtherUsers[0].Avatar}" Width="50" Height="50"/>
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        
         <StackPanel RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
-                
-                <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding NavigateChatsCommand}">Chats</Button>
-                <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding LogoutCommand}">Logout</Button>
-            </StackPanel>
 
-    </RelativePanel>
+            <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding NavigateChatsCommand}">Chats</Button>
+        </StackPanel>
+        
+        
+    </Grid>
+    <Page.BottomAppBar>
+        <CommandBar >
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Logout" Command="{Binding LogoutCommand}"/>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
     
 </Page>

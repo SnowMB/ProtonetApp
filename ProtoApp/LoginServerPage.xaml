@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="ProtoApp.LoginServerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProtoApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    DataContext="{Binding LoginServer, Source={StaticResource Locator}}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock Margin="80,195,80,425">
+    		<Run Text="Server"/>
+        </TextBlock>
+        <TextBox Text="{Binding Server, Mode=TwoWay}" Margin="80,215,80,393"/>
+
+    </Grid>
+</Page>
