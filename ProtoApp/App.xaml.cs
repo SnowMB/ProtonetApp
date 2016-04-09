@@ -27,7 +27,7 @@ namespace ProtoApp
     /// </summary>
     sealed partial class App : Application
     {
-        public ViewModelLocator Locator => Resources.Values.OfType<ViewModelLocator>().Single();
+        public ViewModelLocator Locator => Resources["Locator"] as ViewModelLocator;
 
 
         /// <summary>

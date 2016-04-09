@@ -270,8 +270,6 @@ namespace ProtoApp
                     UserID = User.ID,
                     Token = channel.Uri,
                     Platform = "windows",
-                    //Uuid = Guid.NewGuid().ToString().Replace("-",""),
-                    //Uuid = "2b6f0cc904d137be2e1730235f5664094b831186",
                     Uuid = Guid.NewGuid(),
                     AppName = "ProtonetApp",
                     Model = "PC",
@@ -283,47 +281,19 @@ namespace ProtoApp
 
                 var dev = await PostAndReadResponseObject<Device>(User.DevicesUrl, content);
 
-                //// Create the web request.
-                //HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
-                //webRequest.Method = "POST";
-                //webRequest.ContentType = "application/x-www-form-urlencoded";
-                //byte[] channelUriInBytes = System.Text.Encoding.UTF8.GetBytes("ChannelUri=" + channel.Uri);
-
-                // Write the channel URI to the request stream.
-                //Stream requestStream = await webRequest.GetRequestStreamAsync();
-                //requestStream.Write(channelUriInBytes, 0, channelUriInBytes.Length);
-
-                //try
-                //{
-                //    // Get the response from the server.
-                //    WebResponse response = await webRequest.GetResponseAsync();
-                //    StreamReader requestReader = new StreamReader(response.GetResponseStream());
-                //    String webResponse = requestReader.ReadToEnd();
-                //}
-
-                //catch (Exception ex)
-                //{
-                //    // Could not send channel URI to server.
-                //}
+                channel.PushNotificationReceived += Channel_PushNotificationReceived;
             }
 
-            catch (Exception ex)
+            catch //(Exception ex)
             {
                 throw;
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
+        private void Channel_PushNotificationReceived(PushNotificationChannel sender, PushNotificationReceivedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
 
         private async Task<Stream> GetAndReadResponseAsStream(string url)
         {

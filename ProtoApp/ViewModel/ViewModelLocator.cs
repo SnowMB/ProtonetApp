@@ -21,8 +21,9 @@ namespace ProtoApp.ViewModel
             else
             {
                 Default.Register<IProtonetImages, ProtonetImages>();
+                Default.Register<IProtonetClient, ProtonetClient>();
                 //Default.Register<IProtonetClient>(() => new ProtonetClient("https://192.168.11.2/"));
-                Default.Register<IProtonetClient>(() => new ProtonetClient());
+
             }
 
             //ViewModels
@@ -32,17 +33,21 @@ namespace ProtoApp.ViewModel
             Default.Register<LoginViewModel>();
 
             //Navigation
-            Default.Register<INavigationService>(() => new NavigationService());
+            Default.Unregister<INavigationService>(); //Unregister to prevent "already registered"- Errors in design time.
+            Default.Register<INavigationService>(() =>
+            {
+                var nav = new NavigationService();
+                nav.Configure("Login", typeof(LoginPage));
+                nav.Configure("Main", typeof(MainPage));
+                nav.Configure("Chats", typeof(ChatsPage));
+                nav.Configure("Chat", typeof(ChatPage));
+                return nav;
+            });
 
-
-            var nav = NavigationService as NavigationService;
-            nav.Configure("Login", typeof(LoginPage));
-            nav.Configure("Main", typeof(MainPage));
-            nav.Configure("Chats", typeof(ChatsPage));
-            nav.Configure("Chat", typeof(ChatPage));
+            
 
             //DialogService
-            Default.Register<IDialogService>(() => new DialogService());
+            Default.Register<IDialogService, DialogService>();
 
 
             DataClient.AuthentificationFailed += LoggedOut;
