@@ -15,6 +15,7 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace ProtoApp.ViewModel
@@ -24,13 +25,6 @@ namespace ProtoApp.ViewModel
         private PrivateChat chat;
         public PrivateChat Chat { get { return chat; } private set { Set(nameof(Chat), ref chat, value); } }
         public ObservableCollection<FileMeep> Meeps { get; } = new ObservableCollection<FileMeep>();
-
-
-
-        
-
-
-
 
 
 
@@ -55,7 +49,7 @@ namespace ProtoApp.ViewModel
             try
             {
                 var meep = await client.CreateMeepAsync(Chat.MeepsUrl, new MeepMessage() { Message = s });
-                Meeps.Add(CreateFileMeep(meep));
+                Meeps.Add(CreateFileMeepFromMeep(meep));
             }
             catch(Exception ex)
             {
@@ -75,12 +69,13 @@ namespace ProtoApp.ViewModel
                 {
                     var read = await file.OpenReadAsync().AsTask();
                     var meep = await client.CreateFileMeepAsync(chat.MeepsUrl, read.AsStreamForRead());
-                    Meeps.Add(CreateFileMeep(meep));
+                    Meeps.Add(CreateFileMeepFromMeep(meep));
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
+                await dialoges.ShowMessageBox("Error sending File!", "Error");
             }
         }
 
@@ -92,7 +87,8 @@ namespace ProtoApp.ViewModel
             Chat = await client.GetChatAsync(url);
             Meeps.Clear();
             var meeps = await client.GetMeepsAsync(Chat.MeepsUrl);
-            foreach (var m in meeps)
+            var sorted = meeps.OrderBy(x => x.CreatedAt);
+            foreach (var m in sorted)
             {
                 var filemeep = await GetLocalFiles(m);
                 Meeps.Add(filemeep);   
@@ -104,7 +100,7 @@ namespace ProtoApp.ViewModel
             var fileTasks = new List<Task>();
 
 
-            var fileMeep = CreateFileMeep(m);
+            var fileMeep = CreateFileMeepFromMeep(m);
 
 
             foreach (var f in m.Files)
@@ -123,7 +119,7 @@ namespace ProtoApp.ViewModel
 
 
 
-        private FileMeep CreateFileMeep(Meep m)
+        private FileMeep CreateFileMeepFromMeep(Meep m)
         {
             return new FileMeep()
             {
