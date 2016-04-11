@@ -33,7 +33,10 @@ namespace ProtoApp.ViewModel
         private RelayCommand navigateChatsCommand;
         public ICommand NavigateChatsCommand => navigateChatsCommand != null ? navigateChatsCommand : navigateChatsCommand = new RelayCommand(() => navigation.NavigateTo("Chats"), () => client.IsAuthentificated);
 
-        public RelayCommand logoutCommand;
+        private RelayCommand logoutCommand;
         public ICommand LogoutCommand => logoutCommand != null ? logoutCommand : logoutCommand = new RelayCommand(() => client.Logout(), () => client.IsAuthentificated);
+
+        private RelayCommand newChatCommand;
+        public ICommand NewChatCommand => newChatCommand != null ? newChatCommand : newChatCommand = new RelayCommand(() => navigation.NavigateTo("Contacts"), () => client.IsAuthentificated);
     }
 }

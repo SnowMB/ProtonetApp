@@ -31,6 +31,7 @@ namespace ProtoApp.ViewModel
             Default.Register<ChatsViewModel>();
             Default.Register<ChatViewModel>();
             Default.Register<LoginViewModel>();
+            Default.Register<ContactsViewModel>();
 
             //Navigation
             Default.Unregister<INavigationService>(); //Unregister to prevent "already registered"- Errors in design time.
@@ -41,6 +42,7 @@ namespace ProtoApp.ViewModel
                 nav.Configure("Main", typeof(MainPage));
                 nav.Configure("Chats", typeof(ChatsPage));
                 nav.Configure("Chat", typeof(ChatPage));
+                nav.Configure("Contacts", typeof(ContactsPage));
                 return nav;
             });
 
@@ -111,6 +113,9 @@ namespace ProtoApp.ViewModel
         
 
         public LoginViewModel Login => Default.GetInstance<LoginViewModel>();
+
+
+        public ContactsViewModel Contacts => Default.GetInstance<ContactsViewModel>();
 
 
 

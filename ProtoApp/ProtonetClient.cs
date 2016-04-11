@@ -27,6 +27,9 @@ namespace ProtoApp
         const string TOKEN_NAME = "X-Protonet-Token";
 
 
+        public string UsersUrl => Server + API + USER;
+
+
         public bool IsAuthentificated => Token != null;
 
 
@@ -46,6 +49,8 @@ namespace ProtoApp
 
 
         public string Token { get; private set; }
+
+        
 
         private CancellationTokenSource cts = new CancellationTokenSource();
         public void CancelAllRequests()
@@ -234,9 +239,10 @@ namespace ProtoApp
 
 
 
-        public Task<List<User>> GetUsersAsync(string url)
+        public async Task<List<User>> GetUsersAsync(string url)
         {
-            throw new NotImplementedException();
+            var responseObject = await GetAndReadResponseObject<UsersContainer>(url);
+            return responseObject?.Users;
         }
 
         public Task<User> GetUserAsync(string url)

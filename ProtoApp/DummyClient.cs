@@ -38,7 +38,15 @@ namespace ProtoApp
       }
     }
 
-    public event EventHandler AuthentificationComplete;
+        public string UsersUrl
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public event EventHandler AuthentificationComplete;
     public event EventHandler AuthentificationFailed;
     public event EventHandler LoggedOut;
 

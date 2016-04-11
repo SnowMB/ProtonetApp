@@ -30,6 +30,7 @@
         <StackPanel RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
 
             <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding NavigateChatsCommand}">Chats</Button>
+            <Button Margin="10" HorizontalAlignment="Stretch" Command="{Binding NewChatCommand}">New...</Button>
         </StackPanel>
         
         

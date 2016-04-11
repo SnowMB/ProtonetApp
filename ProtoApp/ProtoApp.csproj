@@ -108,6 +108,9 @@
     <Compile Include="ChatsPage.xaml.cs">
       <DependentUpon>ChatsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ContactsPage.xaml.cs">
+      <DependentUpon>ContactsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DummyClient.cs" />
     <Compile Include="IProtonetClient.cs" />
     <Compile Include="IProtonetImages.cs" />
@@ -115,10 +118,10 @@
     <Compile Include="Objects\DeviceMessage.cs" />
     <Compile Include="Objects\MeContainer.cs" />
     <Compile Include="Objects\MeepMessage.cs" />
+    <Compile Include="Objects\UsersContainer.cs" />
     <Compile Include="ProtonetClient.cs" />
     <Compile Include="StorageFileToImageConverter.cs" />
     <Compile Include="ViewModelPage.cs" />
-    <Compile Include="IProtonetDataService.cs" />
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
@@ -139,10 +142,9 @@
     <Compile Include="Objects\TokenResponse.cs" />
     <Compile Include="Objects\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProtonetDataService.cs" />
     <Compile Include="ViewModel\ChatsViewModel.cs" />
     <Compile Include="ViewModel\ChatViewModel.cs" />
-    <Compile Include="DesignDataService.cs" />
+    <Compile Include="ViewModel\ContactsViewModel.cs" />
     <Compile Include="ViewModel\FileMeep.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -176,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ChatsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ContactsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
