@@ -9,24 +9,51 @@
     x:Name="window"
     DataContext="{Binding Chats, Source={StaticResource Locator}}">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView ItemsSource="{Binding Chats}">
+    <Grid Background="Gray">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="90"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <ListView Grid.Column="0" ItemsSource="{Binding Chats}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Button Command="{Binding DataContext.NavigateChatCommand, ElementName=window}" CommandParameter="{Binding Url}">
                         <StackPanel>
-                            <Image Source="{Binding OtherUsers[0].Avatar}"/>
-                            <TextBlock FontWeight="Bold">ID</TextBlock>
-                            <TextBlock Text="{Binding ID}"/>
-                            <TextBlock FontWeight="Bold">Last Message</TextBlock>
-                            <TextBlock Text="{Binding LastMeep.Message}"/>
-                            <TextBlock FontWeight="Bold">Date</TextBlock>
-                            <TextBlock Text="{Binding LastMeepDate}"/>
+                            <Image Source="{Binding OtherUsers[0].Avatar}" Width="50" Height="50"/>
+                            <!--<TextBlock FontWeight="Bold">ID</TextBlock>-->
+                            <!--<TextBlock Text="{Binding ID}"/>-->
+                            <!--<TextBlock FontWeight="Bold">Last Message</TextBlock>-->
+                            <!--<TextBlock Text="{Binding LastMeep.Message}"/>-->
+                            <!--<TextBlock FontWeight="Bold">letzte Nachricht</TextBlock>-->
+                            <!--<TextBlock Text="{Binding LastMeepDate}"/>-->
                         </StackPanel>
                     </Button>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
+        <ListView Grid.Column="1" ItemsSource="{Binding Meeps}">
+            <!--<ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="10" Background="{ThemeResource ContentDialogBorderThemeBrush}">
+                        <StackPanel Margin="5">
+                            <ListView ItemsSource="{Binding LocalFiles}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image ImageFailed="Image_ImageFailed" Source="{Binding Converter={StaticResource ImageConverter}}"/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Message}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="10" Text="{Binding User.FirstName}"/>
+                                <TextBlock FontSize="10" Text="{Binding UpdatedAt}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>-->
+        </ListView>
     </Grid>
 </local:ViewModelPage>

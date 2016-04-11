@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="005975ec-7a4d-4d58-87a6-c8a21b6a65e1" Publisher="CN=marbru" Version="1.0.0.0" />
+  <Identity Name="29399virtuosVR.ProtonetMessenger" Publisher="CN=40C1FB2D-76F7-4CCE-B179-039FD4969EC4" Version="1.1.1.0" />
   <mp:PhoneIdentity PhoneProductId="005975ec-7a4d-4d58-87a6-c8a21b6a65e1" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>ProtoApp</DisplayName>
-    <PublisherDisplayName>marbru</PublisherDisplayName>
+    <DisplayName>Protonet Messenger</DisplayName>
+    <PublisherDisplayName>virtuosVR</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -15,16 +15,18 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ProtoApp.App">
-      <uap:VisualElements DisplayName="ProtoApp" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="ProtoApp" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
+      <uap:VisualElements DisplayName="Protonet Messenger" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="ProtoApp" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\Store.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square310x310Logo" />
+          </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="gray" />
       </uap:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    <Capability Name="privateNetworkClientServer" />
     <uap:Capability Name="picturesLibrary" />
   </Capabilities>
 </Package>

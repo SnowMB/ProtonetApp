@@ -16,10 +16,10 @@
         </Grid.RowDefinitions>
         
         <ListView Grid.Row="0"
-                  ItemsSource="{Binding Meeps}">
+                  ItemsSource="{Binding Meeps}" Background="Gray">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Border Margin="10" Background="Aqua">
+                    <Border Margin="10" Background="{ThemeResource ContentDialogBorderThemeBrush}">
                         <StackPanel Margin="5">
                             <ListView ItemsSource="{Binding LocalFiles}">
                                 <ListView.ItemTemplate>
@@ -47,7 +47,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <TextBox x:Name="messageBox"
-                     Grid.Column="0"/>
+                     Grid.Column="0" Background="Gray"/>
             <Button x:Name="send" 
                     Grid.Column="2"
                     Command="{Binding SendCommand}" 
